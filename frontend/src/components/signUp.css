@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Jersey+25&display=swap');
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(315deg, #5C65A1, #2B3786 57%);
+    margin: 0;
+    font-family: "Jersey 25",sans-serif;
+  }
+  
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  .loginBox {
+    background: hsla(0, 0%, 100%, 0.5);
+    backdrop-filter: blur(20px);
+    padding: 20px;
+    border-radius: 15px;
+    width: 400px;
+    text-align: center;
+    height: 450px;
+    transition: width 1s ease, opacity 1s ease; 
+  }
+
+  .loginBox.expanded{
+    width: 500px;
+  }
+
+  .loginBox.faded{
+    opacity: 0;
+  }
+  
+  h2 {
+    color: black;
+    margin-bottom: 25px;
+    font-size: 64px;
+  }
+  
+  .inputGroup {
+    margin-bottom: 20px;
+    text-align: left;
+    font-size: 25px;
+    font-family: "Jersey 25",sans-serif;
+    transition: width 1s ease;
+  }
+  
+  .inputGroup label {
+    font-weight: bold;
+    display: block;
+    font-size: 25px;
+    font-family: "Jersey 25",sans-serif;
+  }
+  
+  .inputGroup input {
+    width: 363px;
+    /* padding: 10px; */
+    font-size: 25px;
+    border: none;
+    border-bottom: 2px solid black;
+    background: transparent;
+    outline: none;
+    color: black;
+    font-family: "Jersey 25",sans-serif;
+    margin-left: 15px;
+  }
+  
+  .inputGroup.expanded{
+    width: 250px;
+  }
+
+  .loginBtn {
+    width: 181px;
+    height: 64px;
+    background: #27A8E0;
+    padding: 10px;
+    border: none;
+    border-radius: 50px;
+    font-size: 45px;
+    cursor: pointer;
+    font-family: "Jersey 25",sans-serif;
+    color: white;
+    transition: 0.5s ease;
+  }
+
+  
+  .loginBtn:hover {
+    background: #239bce;
+  }
+  
+  .loginText{
+    margin: 15px 0;
+    color: black;
+    font-size: 24px;
+  }
+  
+  .googleBtn img {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    border-radius: 15px;
+  }
+  
+  .signupText {
+    margin-top: 10px;
+    color: white;
+  }
+  
+  .signupLink {
+    color: #27A8E0;
+    cursor: pointer;
+  }
+
+  .signupLink:hover{
+    color: #239bce;
+    cursor: pointer;
+  }
+  
