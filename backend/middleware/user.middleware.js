@@ -7,7 +7,7 @@ const sanitize = require('mongo-sanitize');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 
-
+//lol
 const foundUser = asyncWrapper(async (req, res, next) => {
     const { email, userName } = sanitize(req.body);
     
