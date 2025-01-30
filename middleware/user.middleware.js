@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
 const sanitize = require('mongo-sanitize');
 const validator = require('validator');
+const { sign } = require('jsonwebtoken');
 
 
 const foundUser = asyncWrapper(async (req, res, next) => {
@@ -52,8 +53,52 @@ const checkInput = asyncWrapper(async (req, res, next) => {
 
     next();
 });
+
+const checkAuthorization = asyncWrapper(async (req, res, next) => {
+    const { id } = sanitize(req.params);
+    const loggedInUserId = sanitize(req.user.id);
+    const loggedInUserRole = sanitize(req.user.role);
+
+    if (loggedInUserRole !== 'admin' && loggedInUserRole !== 'owner') {
+        const error = AppError.create('You are not authorized to perform this action', 401, httpStatus.Error);
+        return next(error);
+    }
+
+    const userToDelete = await User.findById(id);
+    if (!userToDelete) {
+        const error = AppError.create('User not found', 404, httpStatus.Error);
+        return next(error);
+    }
+
+    next();
+});
+
+const protect = async (req, res, next) => {
+    const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+    
+    if (!token) {
+        return next(new AppError('Not authorized, no token', 401, 'error'));
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded;  
+        next();
+    } catch (error) {
+        return next(new AppError('Not authorized, token failed', 401, 'error'));
+    }
+};
+
+const signOut = ()=>{
+    localStorage.removeItem('token');
+    window.location = '/signIn';
+}
+
 module.exports = {
     foundUser,
     passwordEncryption,
-    checkInput
+    checkInput,
+    checkAuthorization,
+    protect,
+    signOut
 };

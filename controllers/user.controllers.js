@@ -20,7 +20,24 @@ const signIn = asyncWrapper(
     }
 )
 
+const deleteUser = asyncWrapper(
+    async (req,res, next) => {
+        const {id} = sanitize(req.params);
+        await userToDelete.remove();
+        return res.status(200).json({status: httpStatus.Success,message: 'User deleted successfully',});
+    }
+)
+
+const signOut= asyncWrapper(
+    async (req,res) => {
+        return res.status(200).json({status : httpStatus.Success , data : {message : "User signed out successfully"}});
+    }
+)
+
 module.exports = {
     signUp,
-    signIn
+    signIn,
+    deleteUser,
+    signOut
 }
+
