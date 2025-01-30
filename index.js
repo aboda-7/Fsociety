@@ -18,9 +18,26 @@ mongoose.connect(URL).then(() =>{
 })
 
 app.use('/users',usersRouter);
+
+//gloabl not found handler
 app.use('*',(req,res)=>{
     res.status(404).json({status : httpStatusCode.Error ,
          data : {message : "this resource is not found"}});
 })
 
+
+//global error handler
+app.use((error, req, res, next) => {  
+    console.log("Status Code:", error.statusCode);
+    console.log("Message:", error.message);
+    if(error.name === "ValidationError"){
+        error.statusMessage = httpStatusCode.Error;
+        error.statusCode = 400;
+        error.message = "Invalid email format";
+    }
+    res.status(error.statusCode || 400).json({
+        status: error.statusMessage,
+        data: { message: error.message }
+    });
+});
 
