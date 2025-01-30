@@ -1,17 +1,26 @@
 const User = require('../models/user.model');
 const httpStatus = require('../utils/http.status');
-const signUp = async (req,res) => {
-    const newUser = new User(req.body);
-    console.log(newUser);
-    const email = await User.findOne({email : newUser.email});
-    if(email){
-        console.log("found : " ,email);
-        return res.status(400).json({status : httpStatus.Error , data : {message : "User already exists"}});
+const asyncWrapper = require('../middleware/async.wrapper');
+const jwt = require('jsonwebtoken');
+const sanitize = require('mongo-sanitize');
+
+const signUp = asyncWrapper(
+    async (req,res) => {
+        const newUser = new User(req.body);
+        await newUser.save();
+        return res.status(201).json({status : httpStatus.Success , data : {message : "User created successfully"}});
     }
-    await newUser.save();
-    return res.status(201).json({status : httpStatus.Success , data : {user : newUser}});
-}
+)
+
+const signIn = asyncWrapper(
+    async (req, res,next) => {
+        const user = sanitize(req.body);
+        const token = await jwt.sign({id : user._id , role : user.role}, process.env.JWT_SECRET);
+        return res.status(201).json({status : httpStatus.Success , data : {token : token}});
+    }
+)
 
 module.exports = {
-    signUp
+    signUp,
+    signIn
 }
