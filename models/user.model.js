@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const appError = require('../utils/app.error');
 
 const UserSchema = new mongoose.Schema({
-    firstName: { // Fixed typo  
+    firstName: {   
         type: String,
         required: true,
     },
@@ -19,12 +20,19 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        validate: [validator.isEmail, 'Email format is not correct'],
+        validate: {
+            validator: validator.isEmail,
+            message: 'Invalid email format',
+        },
     },
     password: {
         type: String,
         required: true,
     },
+    role: {
+        type: String,
+        default: 'user',
+    },  
 });
 
 module.exports = mongoose.model('User', UserSchema);
