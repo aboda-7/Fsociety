@@ -15,7 +15,7 @@ router.route('/deleteUser/:email')
 router.route('/signOut')
     .get(userControllers.signOut);
 
-    router.route('/changePassword/:email')
+router.route('/changePassword/:email')
     .patch(middleWare.protect, userControllers.changePassword);
 
 module.exports = router;
