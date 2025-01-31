@@ -7,6 +7,8 @@ const sanitize = require('mongo-sanitize');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const {userFind} = require('../utils/user.find');
+
 
 const foundUser = asyncWrapper(async (req, res, next) => {
     const { email, userName } = sanitize(req.body);
@@ -38,12 +40,7 @@ const passwordEncryption = asyncWrapper( async (req,res,next) => {
 const checkInput = asyncWrapper(async (req, res, next) => {
     let {input, password} = sanitize(req.body);
     password = String(password);
-    let user;
-    if (validator.isEmail(input)) {
-        user = await User.findOne({ email : input }); // Find user by email
-    } else {
-        user = await User.findOne({ userName: input }); // Find user by username
-    }
+    const user = await userFind(input);
     // If no user is found
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!user || !passwordMatch) {

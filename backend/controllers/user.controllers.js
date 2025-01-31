@@ -8,6 +8,8 @@ const AppError = require('../utils/app.error');
 const bcrypt = require('bcrypt');
 const cookieAdd = require('../utils/cookies')
 const {generateToken} = require('../utils/jwt.token');
+const {userFind} = require('../utils/user.find');
+
 
 const signUp = asyncWrapper(
     async (req,res) => {
@@ -19,13 +21,8 @@ const signUp = asyncWrapper(
 
 const signIn = asyncWrapper(
     async (req, res,next) => {
-        let user;
         const {input, password} = sanitize(req.body);
-        if (validate.isEmail(input)) {
-            user = await User.findOne({ email : input }); // Find user by email
-        } else {
-            user = await User.findOne({ userName: input }); // Find user by username
-        }
+        const user = await userFind(input);
         const accessToken = await generateToken({id : user._id , role : user.role}, process.env.ACCESS_SECRET, '5m');
         const refreshToken = await generateToken({id : user._id , role : user.role}, process.env.REFRESH_SECRET, '7d');
         await cookieAdd(res , 'refreshToken' , refreshToken);
