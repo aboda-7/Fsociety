@@ -17,25 +17,17 @@ body {
     height: 100%;
   }
   
-  .loginBox {
+  .signUp {
     background: hsla(0, 0%, 100%, 0.5);
     backdrop-filter: blur(20px);
     padding: 20px;
     border-radius: 15px;
-    width: 400px;
+    width: 475px;
     text-align: center;
-    height: 450px;
-    transition: width 1s ease, opacity 1s ease; 
+    height: 525px;
   }
 
-  .loginBox.expanded{
-    width: 500px;
-  }
 
-  .loginBox.faded{
-    opacity: 0;
-  }
-  
   h2 {
     color: black;
     margin-bottom: 25px;
@@ -43,6 +35,7 @@ body {
   }
   
   .inputGroup {
+    flex: 1;
     margin-bottom: 20px;
     text-align: left;
     font-size: 25px;
@@ -58,8 +51,7 @@ body {
   }
   
   .inputGroup input {
-    width: 363px;
-    /* padding: 10px; */
+    width: 200px;
     font-size: 25px;
     border: none;
     border-bottom: 2px solid black;
@@ -69,12 +61,14 @@ body {
     font-family: "Jersey 25",sans-serif;
     margin-left: 15px;
   }
-  
-  .inputGroup.expanded{
-    width: 250px;
-  }
 
-  .loginBtn {
+  .inputRow{
+    display: flex;
+    justify-content: space-between;
+  }
+  
+
+  .signUpBtn {
     width: 181px;
     height: 64px;
     background: #27A8E0;
@@ -86,14 +80,16 @@ body {
     font-family: "Jersey 25",sans-serif;
     color: white;
     transition: 0.5s ease;
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
 
   
-  .loginBtn:hover {
+  .signUpBtn:hover {
     background: #239bce;
   }
   
-  .loginText{
+  .signUpText{
     margin: 15px 0;
     color: black;
     font-size: 24px;
@@ -104,19 +100,21 @@ body {
     height: 50px;
     cursor: pointer;
     border-radius: 15px;
+    margin-bottom: 2px;
   }
   
-  .signupText {
+  .loginText {
     margin-top: 10px;
     color: white;
   }
   
-  .signupLink {
+  .loginLink {
     color: #27A8E0;
     cursor: pointer;
+    transition: 0.5s ease;
   }
 
-  .signupLink:hover{
+  .loginLink:hover{
     color: #239bce;
     cursor: pointer;
   }
