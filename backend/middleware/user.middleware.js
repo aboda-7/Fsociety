@@ -85,18 +85,6 @@ const protect = async (req, res, next) => {
     }
 };
 
-const checkPassword = asyncWrapper(
-    async (req, res, next) => {
-        const { email } = sanitize(req.params);
-        const { prevPassword } = sanitize(req.body);
-        const passwordMatch = await bcrypt.compare(prevPassword, user.password);
-        if (!passwordMatch) {
-            const error = AppError.create("Unauthorized, wrong password", 401 , httpStatus.Error);
-            return next(error);
-        }
-    }
-)
-
 
 
 module.exports = {
@@ -104,6 +92,5 @@ module.exports = {
     passwordEncryption,
     checkInput,
     checkAuthorization,
-    protect,
-    checkPassword
+    protect
 };

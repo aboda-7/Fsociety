@@ -5,6 +5,7 @@ const usersRouter = require('./routes/users.router');
 const httpStatusCode = require('./utils/http.status');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const profileRouter = require('./routes/profile.router');
 const app = express();
 
 app.use(cors());
@@ -21,6 +22,8 @@ mongoose.connect(URL).then(() =>{
 })
 
 app.use('/users',usersRouter);
+
+app.use('/profile',profileRouter);
 
 //gloabl not found handler
 app.use('*',(req,res)=>{

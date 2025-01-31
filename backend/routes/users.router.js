@@ -12,10 +12,4 @@ router.route('/signIn')
 router.route('/deleteUser/:email')
     .delete(middleWare.protect,middleWare.checkAuthorization,userControllers.deleteUser);
 
-router.route('/signOut')
-    .get(userControllers.signOut);
-
-router.route('/changePassword/:email')
-    .patch(middleWare.protect, userControllers.changePassword);
-
 module.exports = router;
