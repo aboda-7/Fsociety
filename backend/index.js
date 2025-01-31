@@ -6,10 +6,9 @@ const httpStatusCode = require('./utils/http.status');
 const cors = require('cors');
 const app = express();
 
-<<<<<<< HEAD
-=======
+
 const app = express();
->>>>>>> 6394320c28fba94bc2e51899cd90b34d94908862
+
 app.use(cors());
 app.use(express.json());
 const URL = process.env.MONGO_URL;
