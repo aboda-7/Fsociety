@@ -7,7 +7,7 @@ const sanitize = require('mongo-sanitize');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 
-//lol
+
 const foundUser = asyncWrapper(async (req, res, next) => {
     const { email, userName } = sanitize(req.body);
     
@@ -47,7 +47,7 @@ const checkInput = asyncWrapper(async (req, res, next) => {
     // If no user is found
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!user || !passwordMatch) {
-        const error = AppError.create("User not found", 404 , httpStatus.Error);
+        const error = AppError.create("Email or Password is incorrect", 404 , httpStatus.Error);
         return next(error);
     }
 
@@ -88,10 +88,18 @@ const protect = async (req, res, next) => {
     }
 };
 
-const signOut = ()=>{
-    localStorage.removeItem('token');
-    window.location = '/signIn';
-}
+const checkPassword = asyncWrapper(
+    async (req, res, next) => {
+        const { email } = sanitize(req.params);
+        const { prevPassword } = sanitize(req.body);
+        const passwordMatch = await bcrypt.compare(prevPassword, user.password);
+        if (!passwordMatch) {
+            const error = AppError.create("Unauthorized, wrong password", 401 , httpStatus.Error);
+            return next(error);
+        }
+    }
+)
+
 
 module.exports = {
     foundUser,
@@ -99,5 +107,5 @@ module.exports = {
     checkInput,
     checkAuthorization,
     protect,
-    signOut
+    checkPassword
 };
