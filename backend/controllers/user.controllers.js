@@ -4,9 +4,6 @@ const asyncWrapper = require('../middleware/async.wrapper');
 const jwt = require('jsonwebtoken');
 const sanitize = require('mongo-sanitize');
 const validate = require('validator');
-const AppError = require('../utils/app.error');
-const bcrypt = require('bcrypt');
-
 const signUp = asyncWrapper(
     async (req,res) => {
         const newUser = new User(req.body);

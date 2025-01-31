@@ -1,10 +1,16 @@
 import axios from "axios";
 import googleLogo from "../images/google.png";
 import "./logIn.css";
-import { useState } from "react";
-
+import { useEffect, useState } from 'react'
+import { useNavigate } from "react-router-dom";
 
 const LogIn = () => {
+
+  const navigate = useNavigate();
+
+  const handleLoginClick = () => {
+    navigate('/signup');
+  };
 
   const [formData, setFormData] = useState({
     input : '',
@@ -33,16 +39,17 @@ const LogIn = () => {
     }
   };
 
+
   return (
     <div className="container">
-      {message && <div style={{ color: 'green' }}>{message}</div>}
-      {error && <div style={{ color: 'red' }}>{error}</div>}
       <div className="loginBox">
         <h2>Log In</h2>
-        <div className="inputGroup">
+        {(error && !message) && <div style={{ color: 'red', marginBottom: '30px'}}>{error}</div>}
+        {(message && !error) && <div style={{ color: 'green', marginBottom: '30px'}}>{message}</div>}
+        <div className="inputLogin">
           <input type="text" placeholder="Username or Email" value={formData.input} onChange={handleInputChange} name="input" required/>
         </div>
-        <div className="inputGroup">
+        <div className="inputLogin">
           <input type="password" placeholder="Password" value={formData.password} onChange={handleInputChange} name="password" required/>
         </div>
         <button className="loginBtn" onClick={handleSubmit}>Log In</button>
@@ -51,7 +58,7 @@ const LogIn = () => {
           <img src={googleLogo} alt="Google Logo" />
         </div>
         <p className="signupText">
-          Don't have an account? <span className="signupLink">Sign Up</span>
+          Don't have an account? <span className="signupLink" onClick={handleLoginClick}>Sign Up</span>
         </p>
       </div>
     </div>
