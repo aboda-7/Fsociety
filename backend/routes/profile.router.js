@@ -6,6 +6,11 @@ const {protect} = require('../middleware/auth.middleware');
 
 
 router.route('/changePassword/:email')
-    .patch(protect, profileControllers.changePassword);
+    .patch(protect,middleWare.checkPassword, profileControllers.changePassword);
 
+router.route('/promoteUser/:userName')
+    .patch(protect,middleWare.isOwner, middleWare.promoteUser, profileControllers.promoteUser);
+
+router.route('/demoteUser/:userName')
+    .patch(protect,middleWare.isOwner, middleWare.demoteUser, profileControllers.demoteUser);
 module.exports = router;

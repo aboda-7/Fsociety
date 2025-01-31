@@ -10,30 +10,38 @@ const bcrypt = require('bcrypt');
 const changePassword = asyncWrapper(
     async (req, res, next) => {
         const { email } = sanitize(req.params); 
-        const { prevPassword, passwordChanged } = sanitize(req.body);
-
+        const { passwordChanged } = sanitize(req.body);
         const user = await User.findOne({ email });
-        if (!user) {
-            const error = AppError.create("User not found", 404, httpStatus.Error);
-            return next(error); 
-        }
-        
-        const passwordMatch = await bcrypt.compare(prevPassword, user.password);
-        if (!passwordMatch) {
-            const error = AppError.create("Incorrect previous password", 401, httpStatus.Error);
-            return next(error);
-        }
-
         const newEncryptedPassword = await bcrypt.hash(passwordChanged, 10);
         user.password = newEncryptedPassword;
-
         await user.save();
-
         return res.status(200).json({status: httpStatus.Success,data: { message: 'Password updated successfully' }
         });
     }
 );
 
+const promoteUser = asyncWrapper(
+    async (req, res, next) => {
+        const { userName } = sanitize(req.params);
+        const user = await User.findOne({ userName });
+        user.role = 'admin';
+        await user.save();
+        return res.status(200).json({status: httpStatus.Success,data: { message: 'User promoted successfully' } });
+    }
+);
+
+const demoteUser = asyncWrapper(
+    async (req, res, next) => {
+        const { userName } = sanitize(req.params);
+        const user = await User.findOne({ userName });
+        user.role = 'user';
+        await user.save();
+        return res.status(200).json({status: httpStatus.Success,data: { message: 'User demoted successfully' } });
+    }
+);
+
 module.exports = {
-    changePassword
+    changePassword,
+    promoteUser,
+    demoteUser  
 };
