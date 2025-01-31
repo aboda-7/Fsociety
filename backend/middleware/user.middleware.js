@@ -6,7 +6,7 @@ const User = require('../models/user.model');
 const sanitize = require('mongo-sanitize');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
-
+const cookieParser = require('cookie-parser');
 
 const foundUser = asyncWrapper(async (req, res, next) => {
     const { email, userName } = sanitize(req.body);
@@ -80,7 +80,7 @@ const protect = async (req, res, next) => {
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, process.env.ACCESS_SECRET);
         req.user = decoded;  
         next();
     } catch (error) {
@@ -99,6 +99,7 @@ const checkPassword = asyncWrapper(
         }
     }
 )
+
 
 
 module.exports = {

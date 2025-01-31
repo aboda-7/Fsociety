@@ -6,10 +6,12 @@ const sanitize = require('mongo-sanitize');
 const validate = require('validator');
 const AppError = require('../utils/app.error');
 const bcrypt = require('bcrypt');
+const cookieAdd = require('../utils/cookies')
+const {generateToken} = require('../utils/jwt.token');
 
 const signUp = asyncWrapper(
     async (req,res) => {
-        const newUser = new User(req.body);
+        const newUser = new User(sanitize(req.body));
         await newUser.save();
         return res.status(201).json({status : httpStatus.Success , data : {message : "User created successfully"}});
     }
@@ -24,9 +26,10 @@ const signIn = asyncWrapper(
         } else {
             user = await User.findOne({ userName: input }); // Find user by username
         }
-        console.log(user.role);
-        const token = await jwt.sign({id : user._id , role : user.role}, process.env.JWT_SECRET);
-        return res.status(200).json({status : httpStatus.Success , data : {token : token}});
+        const accessToken = await generateToken({id : user._id , role : user.role}, process.env.ACCESS_SECRET, '5m');
+        const refreshToken = await generateToken({id : user._id , role : user.role}, process.env.REFRESH_SECRET, '7d');
+        await cookieAdd(res , 'refreshToken' , refreshToken);
+        return res.status(200).json({status : httpStatus.Success , data : {token : accessToken}});
     }
 )
 
