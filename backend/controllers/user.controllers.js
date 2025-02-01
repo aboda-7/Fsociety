@@ -1,5 +1,4 @@
 const User = require('../models/user.model');
-const Profile = require('../models/profile.model');
 const httpStatus = require('../utils/http.status');
 const asyncWrapper = require('../middleware/async.wrapper');
 const jwt = require('jsonwebtoken');
@@ -14,6 +13,7 @@ const Token = require('../models/token.model');
 const {saveToken} = require('../utils/jwt.token');
 const sendOTP = require('../utils/mailer');
 const Otp = require('../models/otp.model');
+const Profile = require('../models/profile.model');
 
 const signUp = asyncWrapper(
     async (req,res) => {
