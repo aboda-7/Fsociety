@@ -16,9 +16,14 @@ const profileSchema = new mongoose.Schema({
             validator: function (value) {
                 return /^(http|https):\/\/[^\s$.?#].[^\s]*(\.(jpg|jpeg|png|gif|webp|bmp|svg))$/i.test(value);
             },
-            message: 'Invalid URL format for profile picture. It must be a valid image URL.',
+            message: 'wrong picture format',
         },
-    }
+    },
+    user : {
+        type : mongoose.Schema.Types.ObjectId , 
+        ref : 'User' , 
+        required : true
+    },
 })
 
 module.exports = mongoose.model('profile', profileSchema);
