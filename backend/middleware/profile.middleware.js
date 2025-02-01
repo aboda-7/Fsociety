@@ -75,7 +75,6 @@ const demoteUser = asyncWrapper(
 
 const checkProfile=asyncWrapper(
     async ( req, res, next) =>{
-        const { bio } = sanitize(req.body); 
         const profile = await Profile.findOne({ user: req.user.id });
         if (!profile) {
             return next(new AppError('Profile not found', httpStatus.NotFound));
