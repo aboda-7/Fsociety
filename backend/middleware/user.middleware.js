@@ -37,7 +37,7 @@ const passwordEncryption = asyncWrapper( async (req,res,next) => {
     next();
 });
 
-const checkInput = asyncWrapper(async (req, res, next) => {
+const checkInputAndPassword = asyncWrapper(async (req, res, next) => {
     let {input, password} = sanitize(req.body);
     password = String(password);
     const user = await userFind(input);
@@ -48,6 +48,24 @@ const checkInput = asyncWrapper(async (req, res, next) => {
         return next(error);
     }
 
+    next();
+});
+
+const checkInput = asyncWrapper(async (req, res, next) => {
+    let input = sanitize(req.body);
+    if(!input){
+        const error = AppError.create("Email or Username required", 400 , httpStatus.Error);
+        return next(error);
+    } 
+    const user = userFind(input);
+    console.log(user);
+    // If no user is found
+    if (!user) {
+        const error = AppError.create("Email or UserName incorrect", 404 , httpStatus.Error);
+        return next(error);
+    }
+    
+    req.user = user;
     next();
 });
 
@@ -87,10 +105,12 @@ const protect = async (req, res, next) => {
 
 
 
+
 module.exports = {
     foundUser,
     passwordEncryption,
-    checkInput,
+    checkInputAndPassword,
     checkAuthorization,
-    protect
+    protect,
+    checkInput
 };
