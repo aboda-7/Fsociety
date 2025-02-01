@@ -7,6 +7,7 @@ const profileSchema = new mongoose.Schema({
     bio:{
         type : String,
         required: false,
+        maxlength: 500,
         default: '',
     },
     profilePicture:{
