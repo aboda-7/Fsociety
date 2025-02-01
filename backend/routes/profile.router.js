@@ -13,4 +13,8 @@ router.route('/promoteUser/:userName')
 
 router.route('/demoteUser/:userName')
     .patch(protect,middleWare.isOwner, middleWare.demoteUser, profileControllers.demoteUser);
+
+router.route('/changeBio')
+    .patch(protect,middleWare.checkProfile, profileControllers.changeBio);
+
 module.exports = router;

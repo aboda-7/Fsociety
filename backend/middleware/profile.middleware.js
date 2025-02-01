@@ -3,11 +3,13 @@ const AppError = require('../utils/app.error');
 const httpStatus = require('../utils/http.status');
 const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
+const profile = require('../models/profile.model');
 const sanitize = require('mongo-sanitize');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const {userFind} = require('../utils/user.find');
+const Profile = require('../models/profile.model');
 
 const checkPassword = asyncWrapper( 
     async (req, res, next) => {
@@ -70,10 +72,24 @@ const demoteUser = asyncWrapper(
         next();
     }
 );
+
+const checkProfile=asyncWrapper(
+    async ( req, res, next) =>{
+        const { bio } = sanitize(req.body); 
+        const profile = await Profile.findOne({ user: req.user.id });
+        if (!profile) {
+            return next(new AppError('Profile not found', httpStatus.NotFound));
+        }
+        next();
+    }
+);
+
+
   
 module.exports = {
     checkPassword,
     isOwner,
     promoteUser,
-    demoteUser
+    demoteUser,
+    checkProfile
 }
