@@ -1,4 +1,5 @@
 const User = require('../models/user.model');
+const Profile = require('../models/profile.model');
 const httpStatus = require('../utils/http.status');
 const asyncWrapper = require('../middleware/async.wrapper');
 const jwt = require('jsonwebtoken');
@@ -16,6 +17,7 @@ const signUp = asyncWrapper(
     async (req,res) => {
         const newUser = new User(sanitize(req.body));
         await newUser.save();
+        await Profile.create({user : newUser.id});
         return res.status(201).json({status : httpStatus.Success , data : {message : "User created successfully"}});
     }
 )
