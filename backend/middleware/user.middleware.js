@@ -41,8 +41,8 @@ const checkInput = asyncWrapper(async (req, res, next) => {
     let {input, password} = sanitize(req.body);
     password = String(password);
     const user = await userFind(input);
-    // If no user is found
     const passwordMatch = await bcrypt.compare(password, user.password);
+    // If no user is found
     if (!user || !passwordMatch) {
         const error = AppError.create("Email or Password is incorrect", 404 , httpStatus.Error);
         return next(error);

@@ -9,7 +9,8 @@ const bcrypt = require('bcrypt');
 const cookieAdd = require('../utils/cookies')
 const {generateToken} = require('../utils/jwt.token');
 const {userFind} = require('../utils/user.find');
-
+const Token = require('../models/token.model');
+const {saveToken} = require('../utils/jwt.token');
 
 const signUp = asyncWrapper(
     async (req,res) => {
@@ -25,7 +26,7 @@ const signIn = asyncWrapper(
         const user = await userFind(input);
         const accessToken = await generateToken({id : user._id , role : user.role}, process.env.ACCESS_SECRET, '5m');
         const refreshToken = await generateToken({id : user._id , role : user.role}, process.env.REFRESH_SECRET, '7d');
-        await cookieAdd(res , 'refreshToken' , refreshToken);
+        await saveToken(res,refreshToken, user._id);
         return res.status(200).json({status : httpStatus.Success , data : {token : accessToken}});
     }
 )

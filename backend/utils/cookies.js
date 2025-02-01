@@ -12,4 +12,4 @@ const cookieAdd = async (res , name , value , options = {}) => {
     };
 
 
-module.exports = cookieAdd;
+module.exports = {cookieAdd};
