@@ -17,4 +17,7 @@ router.route('/demoteUser/:userName')
 router.route('/changeBio')
     .patch(protect,middleWare.checkProfile, profileControllers.changeBio);
 
+    router.route('/changeProfilePicture')
+    .patch(protect,middleWare.checkProfile, profileControllers.changeProfilePicture);
+
 module.exports = router;

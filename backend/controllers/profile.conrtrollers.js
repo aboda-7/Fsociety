@@ -51,9 +51,20 @@ const changeBio = asyncWrapper(
     }
 );
 
+const changeProfilePicture = asyncWrapper(
+    async (req, res, next)=>{
+        const { profilePicture} = sanitize(req.body);
+        const profile = await Profile.findOne({ user : req.user.id});
+        profile.profilePicture = profilePicture;
+        await profile.save();
+        return res.status(200).json({ status: httpStatus.Success,data: { message: 'profile Picture updated successfully'},});
+    }
+);
+
 module.exports = {
     changePassword,
     promoteUser,
     demoteUser,
     changeBio,
+    changeProfilePicture,
 };
