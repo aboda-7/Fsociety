@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 const profileRouter = require('./routes/profile.router');
 const app = express();
 const refreshTokenRouter = require('./routes/token.refresh');
+const postRouter = require('./routes/post.router');
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
@@ -24,6 +25,8 @@ mongoose.connect(URL).then(() =>{
 app.use('/users',usersRouter);
 
 app.use('/profile',profileRouter);
+
+app.use('/post',postRouter);
 
 app.use('/refresh',refreshTokenRouter);
 
