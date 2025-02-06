@@ -9,7 +9,7 @@ const cookieParser = require('cookie-parser');
 const {userFind} = require('../utils/user.find');
 const Post = require('../models/post.model');
 
-const createPost = asyncWrapper(
+const postDataChecker = asyncWrapper(
     async (req, res, next) => {
         const {content,attachments} = sanitize (req.body);
 
@@ -26,7 +26,29 @@ const createPost = asyncWrapper(
     }
 )
 
+const editPost = asyncWrapper(
+    async (req, res, next) => {
+        let{content,attachments} = sanitize (req.body);
+        const postId = sanitize (req.params.id);
+        const post = await Post.findOne({_id: postId});
+        const editor = sanitize (req.user.id);
+
+        if(!post){
+            const error = AppError.create('Post not found', 404, httpStatus.Error);
+            return next(error);
+        }
+
+        if(editor !== post.publisher.toString()){
+            const error = AppError.create('You are not allowed to edit this post', 403, httpStatus.Error);
+            return next(error);
+        }
+
+        next();
+    }
+)
+
 
 module.exports={
-    createPost
+    postDataChecker,
+    editPost
 }

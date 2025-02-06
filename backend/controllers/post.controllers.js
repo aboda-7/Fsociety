@@ -17,7 +17,21 @@ const createPost = asyncWrapper(
     }
 );
 
+const editPost = asyncWrapper(
+    async (req, res, next) =>{
+        const {content,attachments} = sanitize (req.body);
+        const postId = sanitize (req.params.id);
+        const post = await Post.findOne({_id: postId});
+        post.content = content;
+        post.attachments = attachments;
+        post.date = Date.now(); 
+        await post.save();
+        res.status(200).json({status: httpStatus.Success,data: {message: 'Post edited successfully'}});
+    }
+)
+
 
 module.exports={
-    createPost
+    createPost,
+    editPost
 }
