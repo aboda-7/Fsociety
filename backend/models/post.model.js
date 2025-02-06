@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const appError = require('../utils/app.error');
 const validator = require('validator');
 const User = require('./user.model');
+const comment = require('./comment.model');
 
 const postSchema = new mongoose.Schema({
     publisher : {
