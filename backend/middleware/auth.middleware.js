@@ -17,6 +17,7 @@ const checkRefreshToken = asyncWrapper(async (req,res,next) => {
     }
     next();
 });
+
 const protect = async (req, res, next) => {
     const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
     

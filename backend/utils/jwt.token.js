@@ -18,7 +18,7 @@ const saveToken = async (res,refreshToken, Id) => {
         const test = await Token.findOne({user : userId});
         await Token.deleteOne({ user: userId });
         const newRefreshToken = await generateToken({id : user._id , role : user.role}, process.env.REFRESH_SECRET, '7d');
-        cookieAdd(res, 'refreshToken', refreshToken);
+        // cookieAdd(res, 'refreshToken', refreshToken);
         await Token.create({ token: newRefreshToken, user: userId });
     } catch (error) {
         console.error('Error saving token:', error);

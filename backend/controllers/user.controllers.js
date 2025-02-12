@@ -26,6 +26,7 @@ const signIn = asyncWrapper(
     async (req, res,next) => {
         const {input, password} = sanitize(req.body);
         const user = await userFind(input);
+        req.user = user;
         const accessToken = await generateToken({id : user._id , role : user.role}, process.env.ACCESS_SECRET, '5m');
         const refreshToken = await generateToken({id : user._id , role : user.role}, process.env.REFRESH_SECRET, '7d');
         await saveToken(res,refreshToken, user._id);

@@ -8,6 +8,9 @@ const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const {userFind} = require('../utils/user.find');
+const Follow = require('../models/profile.model');
+const mongoose = require('mongoose');
+
 
 const checkPassword = asyncWrapper( 
     async (req, res, next) => {
@@ -70,10 +73,61 @@ const demoteUser = asyncWrapper(
         next();
     }
 );
+
+
+const followUser = asyncWrapper( 
+    async (req,res,next) => {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        try {
+            const userId = user._id;
+            const targetId = req.body.target;
+            console.log(userId);
+            const existingFollow = await Follow.findOnd({
+                follower : userId,
+                followed : targetId,
+            }).session(session);
+
+            if(existingFollow){
+                const error = AppError.create('cannot demote this user', 400, httpStatus.Error);
+                return next(error);
+            }
+            const follow = new Follow({
+                follower : userId,
+                followed : targetId,
+            });
+            await follow.save({session});
+
+            await User.findByIdAndUpdate(
+                targetUserId,
+                { $inc: { followersCount: 1 } },
+                { session }
+            );
+
+            await User.findByIdAndUpdate(
+                currentUserId,
+                { $inc: { followingCount: 1 } },
+                { session }
+            );
+
+            await session.commitTransaction();
+            return res.status(201),json({status : httpStatus.Success , data : {message : "Done !"}});
+        }
+        catch(err){
+            const error = AppError.create('server----error', 500,err);
+            return next(error);
+        }
+        finally {
+            session.endSession();
+        }
+    }
+);
+
   
 module.exports = {
     checkPassword,
     isOwner,
     promoteUser,
-    demoteUser
+    demoteUser,
+    followUser
 }

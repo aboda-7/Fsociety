@@ -111,6 +111,6 @@ module.exports = {
     passwordEncryption,
     checkInputAndPassword,
     checkAuthorization,
-    protect,
+    protect,    
     checkInput
 };

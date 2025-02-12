@@ -13,4 +13,7 @@ router.route('/promoteUser/:userName')
 
 router.route('/demoteUser/:userName')
     .patch(protect,middleWare.isOwner, middleWare.demoteUser, profileControllers.demoteUser);
+
+router.route('/follow')
+    .post(middleWare.followUser);
 module.exports = router;
