@@ -14,6 +14,15 @@ router.route('/promoteUser/:userName')
 router.route('/demoteUser/:userName')
     .patch(protect,middleWare.isOwner, middleWare.demoteUser, profileControllers.demoteUser);
 
+<<<<<<< HEAD
 router.route('/follow')
     .post(middleWare.followUser);
+=======
+router.route('/changeBio')
+    .patch(protect,middleWare.checkProfile, profileControllers.changeBio);
+
+    router.route('/changeProfilePicture')
+    .patch(protect,middleWare.checkProfile, profileControllers.changeProfilePicture);
+
+>>>>>>> 34d39e17b6dbf46081174d44b02492cac731c85e
 module.exports = router;

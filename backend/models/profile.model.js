@@ -13,7 +13,7 @@ const profileSchema = new mongoose.Schema({
     profilePicture:{
         type : String,
         required : false,
-        default: '',
+        default: 'https://static.vecteezy.com/system/resources/previews/020/765/399/original/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg',
         validate: {
             validator: function (value) {
                 return /^(http|https):\/\/[^\s$.?#].[^\s]*(\.(jpg|jpeg|png|gif|webp|bmp|svg))$/i.test(value);
@@ -23,7 +23,7 @@ const profileSchema = new mongoose.Schema({
     },
     user : {
         type : mongoose.Schema.Types.ObjectId , 
-        ref : 'User' , 
+        ref : 'user' , 
         required : true
     },
 })

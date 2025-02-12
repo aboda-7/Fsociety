@@ -3,14 +3,19 @@ const AppError = require('../utils/app.error');
 const httpStatus = require('../utils/http.status');
 const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
+const profile = require('../models/profile.model');
 const sanitize = require('mongo-sanitize');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const {userFind} = require('../utils/user.find');
+<<<<<<< HEAD
 const Follow = require('../models/profile.model');
 const mongoose = require('mongoose');
 
+=======
+const Profile = require('../models/profile.model');
+>>>>>>> 34d39e17b6dbf46081174d44b02492cac731c85e
 
 const checkPassword = asyncWrapper( 
     async (req, res, next) => {
@@ -74,6 +79,7 @@ const demoteUser = asyncWrapper(
     }
 );
 
+<<<<<<< HEAD
 
 const followUser = asyncWrapper( 
     async (req,res,next) => {
@@ -123,11 +129,28 @@ const followUser = asyncWrapper(
     }
 );
 
+=======
+const checkProfile=asyncWrapper(
+    async ( req, res, next) =>{
+        const profile = await Profile.findOne({ user: req.user.id });
+        if (!profile) {
+            return next(new AppError('Profile not found', httpStatus.NotFound));
+        }
+        next();
+    }
+);
+
+
+>>>>>>> 34d39e17b6dbf46081174d44b02492cac731c85e
   
 module.exports = {
     checkPassword,
     isOwner,
     promoteUser,
     demoteUser,
+<<<<<<< HEAD
     followUser
+=======
+    checkProfile
+>>>>>>> 34d39e17b6dbf46081174d44b02492cac731c85e
 }

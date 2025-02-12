@@ -1,4 +1,5 @@
 const User = require('../models/user.model');
+const Profile = require('../models/profile.model');
 const httpStatus = require('../utils/http.status');
 const asyncWrapper = require('../middleware/async.wrapper');
 const sanitize = require('mongo-sanitize');
@@ -40,8 +41,30 @@ const demoteUser = asyncWrapper(
     }
 );
 
+const changeBio = asyncWrapper(
+    async (req, res, next) => {
+        const { bio } = sanitize(req.body); 
+        const profile = await Profile.findOne({ user: req.user.id });
+        profile.bio = bio;
+        await profile.save();
+        return res.status(200).json({ status: httpStatus.Success,data: { message: 'Bio updated successfully'},});
+    }
+);
+
+const changeProfilePicture = asyncWrapper(
+    async (req, res, next)=>{
+        const { profilePicture} = sanitize(req.body);
+        const profile = await Profile.findOne({ user : req.user.id});
+        profile.profilePicture = profilePicture;
+        await profile.save();
+        return res.status(200).json({ status: httpStatus.Success,data: { message: 'profile Picture updated successfully'},});
+    }
+);
+
 module.exports = {
     changePassword,
     promoteUser,
-    demoteUser  
+    demoteUser,
+    changeBio,
+    changeProfilePicture,
 };
