@@ -34,7 +34,7 @@ const editPost = asyncWrapper(
         const editor = sanitize (req.user.id);
 
 
-        if(editor !== post.publisher.toString()& editor.role !== 'admin' & editor.role !== 'owner'){
+        if(editor !== post.publisher.toString()){
             const error = AppError.create('You are not allowed to edit this post', 403, httpStatus.Error);
             return next(error);
         }
