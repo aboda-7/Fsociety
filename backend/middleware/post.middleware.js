@@ -52,7 +52,9 @@ const isPost = asyncWrapper(
         }
         next();
     }
-)
+);
+
+
 
 module.exports={
     postDataChecker,

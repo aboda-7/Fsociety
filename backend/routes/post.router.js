@@ -13,5 +13,8 @@ router.route('/editPost/:id')
 
 router.route('/likePost/:id')
     .patch(protect,middleWare.isPost, postControllers.likePost);
+
+router.route('/addComment/:id')
+    .patch(protect,middleWare.isPost, postControllers.addComment);
     
 module.exports = router;
