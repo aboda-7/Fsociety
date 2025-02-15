@@ -53,9 +53,16 @@ const addComment = asyncWrapper(async (req, res, next) => {
     res.status(200).json({status: httpStatus.Success, data: { message: 'Comment added successfully' }});
 });
 
+const deletePost = asyncWrapper(async (req, res, next) => {
+    const postId = sanitize(req.params.id);
+    await Post.findByIdAndDelete(postId)
+    res.status(200).json({status: httpStatus.Success, data: { message: 'Post deleted successfully' }});
+});
+
 module.exports={
     createPost,
     editPost,
     likePost,
-    addComment
+    addComment,
+    deletePost
 }

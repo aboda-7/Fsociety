@@ -16,5 +16,8 @@ router.route('/likePost/:id')
 
 router.route('/addComment/:id')
     .patch(protect,middleWare.isPost, postControllers.addComment);
+   
+router.route('/deletePost/:id')
+    .delete(protect,middleWare.isPost, middleWare.deletePost, postControllers.deletePost);
     
 module.exports = router;

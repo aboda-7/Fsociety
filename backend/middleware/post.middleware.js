@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const {userFind} = require('../utils/user.find');
 const Post = require('../models/post.model');
+const Comment = require('../models/comment.model'); 
 
 const postDataChecker = asyncWrapper(
     async (req, res, next) => {
@@ -54,10 +55,25 @@ const isPost = asyncWrapper(
     }
 );
 
-
+const deletePost = asyncWrapper(
+    async (req,res,next) => {
+        const postId = sanitize(req.params.id);
+        const post = await Post.findById(postId);
+        const editor = sanitize(req.user.id);
+        if(editor !== post.publisher.toString() && editor.role !== 'admin' && editor.role !== 'owner'){
+            return next(new AppError('You are not allowed to delete this post', 403, httpStatus.Error));
+        }
+        await Comment.deleteMany({ _id: { $in: post.comments } });
+        post.comments = [];
+        post.likes = [];
+        await post.save(); 
+        next();
+    }
+)
 
 module.exports={
     postDataChecker,
     editPost,
-    isPost
+    isPost,
+    deletePost
 }
