@@ -33,12 +33,8 @@ const editPost = asyncWrapper(
         const post = await Post.findOne({_id: postId});
         const editor = sanitize (req.user.id);
 
-        if(!post){
-            const error = AppError.create('Post not found', 404, httpStatus.Error);
-            return next(error);
-        }
 
-        if(editor !== post.publisher.toString()){
+        if(editor !== post.publisher.toString()& editor.role !== 'admin' & editor.role !== 'owner'){
             const error = AppError.create('You are not allowed to edit this post', 403, httpStatus.Error);
             return next(error);
         }
@@ -47,8 +43,19 @@ const editPost = asyncWrapper(
     }
 )
 
+const isPost = asyncWrapper(
+    async (req, res, next) => {
+        const postId = sanitize(req.params.id); 
+        const post = await Post.findById(postId);
+        if (!post) {
+            return next(new AppError("Post not found", 404));
+        }
+        next();
+    }
+)
 
 module.exports={
     postDataChecker,
-    editPost
+    editPost,
+    isPost
 }

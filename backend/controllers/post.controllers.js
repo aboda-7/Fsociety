@@ -30,8 +30,20 @@ const editPost = asyncWrapper(
     }
 )
 
+const likePost = asyncWrapper(async (req, res, next) => {
+    const postId = sanitize(req.params.id); 
+    const userId = sanitize(req.user.id);
+    const post = await Post.findById(postId); 
+    const hasLiked = post.likes.includes(userId);
+    if (hasLiked) post.likes.pull(userId);
+    else  post.likes.addToSet(userId);
+    await post.save();
+    res.status(200).json({status: httpStatus.Success, data: { likes: post.likes.length, message: hasLiked ? "Post unliked" : "Post liked" }});
+});
+
 
 module.exports={
     createPost,
-    editPost
+    editPost,
+    likePost
 }

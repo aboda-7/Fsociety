@@ -8,6 +8,10 @@ router.route('/createPost')
     .post(protect, middleWare.postDataChecker, postControllers.createPost);
 
 router.route('/editPost/:id')
-    .patch(protect, middleWare.editPost,middleWare.postDataChecker , postControllers.editPost);
+    .patch(protect,middleWare.isPost, middleWare.editPost, 
+        middleWare.postDataChecker , postControllers.editPost);
 
+router.route('/likePost/:id')
+    .patch(protect,middleWare.isPost, postControllers.likePost);
+    
 module.exports = router;
