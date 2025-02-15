@@ -7,11 +7,8 @@ const cookieParser = require('cookie-parser');
 const profileRouter = require('./routes/profile.router');
 const app = express();
 const refreshTokenRouter = require('./routes/token.refresh');
-<<<<<<< HEAD
 const cors = require('cors');
-=======
 const postRouter = require('./routes/post.router');
->>>>>>> 34d39e17b6dbf46081174d44b02492cac731c85e
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());

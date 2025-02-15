@@ -4,6 +4,7 @@ const userMiddleWare = require('../middleware/user.middleware');
 const {checkRefreshToken} = require('../middleware/auth.middleware');
 const userControllers = require('../controllers/user.controllers');
 const {generateAndStoreOTP} = require('../controllers/user.controllers');
+
 router.route('/signUp')
     .post(userMiddleWare.foundUser,userMiddleWare.passwordEncryption,userControllers.signUp);
 
