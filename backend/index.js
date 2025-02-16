@@ -9,6 +9,7 @@ const app = express();
 const refreshTokenRouter = require('./routes/token.refresh');
 const cors = require('cors');
 const postRouter = require('./routes/post.router');
+const commentRouter = require('./routes/comment.router');
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
@@ -30,6 +31,7 @@ app.use('/post',postRouter);
 
 app.use('/refresh',refreshTokenRouter);
 
+app.use('/comment',commentRouter);
 
 //gloabl not found handler
 app.use('*',(req,res)=>{
