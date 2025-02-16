@@ -71,9 +71,10 @@ const deletePost = asyncWrapper(
     }
 )
 
+
 module.exports={
     postDataChecker,
     editPost,
     isPost,
-    deletePost
+    deletePost,
 }
