@@ -46,9 +46,24 @@ const editorCheck = asyncWrapper(
     }
 )
 
+const deleteComment = asyncWrapper(
+    async (req, res, next) => {
+        const commentId = sanitize(req.params.id);
+        const comment = await Comment.findById(commentId);
+        const actorId = sanitize(req.user.id);
+        const actor = await User.findById(actorId);
+        if (actorId !== comment.writer.toString() && actor.role !== 'admin'&& actor.role !== 'owner'){
+            return next(new AppError('You are not allowed to delete this comment', 403));
+        }
+        comment.likes = [];
+        await comment.save();
+        next();
+    }
+)
 
 module.exports = {
     isComment,
     checkComment,
-    editorCheck
+    editorCheck,
+    deleteComment
 }

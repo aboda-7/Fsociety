@@ -11,4 +11,7 @@ router.route('/editComment/:id')
 router.route('/likeComment/:id')
     .patch(protect, middleWare.isComment, commentControllers.likeComment);
 
+router.route('/deleteComment/:id')
+    .delete(protect, middleWare.isComment, middleWare.deleteComment, commentControllers.deleteComment);
+
 module.exports = router;
