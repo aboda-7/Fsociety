@@ -21,6 +21,18 @@ const editComment = asyncWrapper(
     }
 )
 
+const likeComment = asyncWrapper(async (req, res, next) => {
+    const commentId = sanitize(req.params.id); 
+    const userId = sanitize(req.user.id);
+    const comment = await Comment.findById(commentId); 
+    const hasLiked = comment.likes.includes(userId);
+    if (hasLiked) comment.likes.pull(userId);
+    else  comment.likes.addToSet(userId);
+    await comment.save();
+    res.status(200).json({status: httpStatus.Success, data: { likes: comment.likes.length, message: hasLiked ? "comment unliked" : "Comment liked" }});
+})
+
 module.exports={
-    editComment
+    editComment,
+    likeComment
 }

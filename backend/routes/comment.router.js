@@ -8,4 +8,7 @@ router.route('/editComment/:id')
     .patch(protect, middleWare.isComment,middleWare.checkComment,
          middleWare.editorCheck, commentControllers.editComment);
 
+router.route('/likeComment/:id')
+    .patch(protect, middleWare.isComment, commentControllers.likeComment);
+
 module.exports = router;
