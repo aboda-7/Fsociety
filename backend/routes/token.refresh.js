@@ -16,7 +16,7 @@ router.route('/')
                 const error = appError.create("Invalid refresh token", 404, httpStatus.Error);
                 return next(error);
             }
-            const accessToken = generateToken({id : decoded.id , role : decoded.role}, process.env.ACCESS_SECRET, '5m');
+            const accessToken = generateToken({id : decoded.id , role : decoded.role}, process.env.ACCESS_SECRET, '10s');
             const RefreshToken = generateToken({id : decoded.id , role : decoded.role}, process.env.REFRESH_SECRET, '7d');
             saveToken(res,RefreshToken,decoded.id);
             return res.status(200).json({status : httpStatus.Success , data : {token : accessToken}});
