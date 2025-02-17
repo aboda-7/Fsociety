@@ -72,7 +72,8 @@ const checkInput = asyncWrapper(async (req, res, next) => {
 const checkAuthorization = asyncWrapper(async (req, res, next) => {
     const { email } = sanitize(req.params);
     const loggedInUserId = sanitize(req.user.id);
-    const loggedInUserRole = sanitize(req.user.role);
+    const user = await User.findById(loggedInUserId);
+    const loggedInUserRole = User.role;
 
     if (loggedInUserRole !== 'admin' && loggedInUserRole !== 'owner') {
         const error = AppError.create('You are not authorized to perform this action', 401, httpStatus.Error);
