@@ -7,6 +7,7 @@ const AppError = require('../utils/app.error');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const Post = require('../models/post.model');
+const Comment = require('../models/comment.model')
 
 const createPost = asyncWrapper(
     async (req, res, next) =>{
@@ -30,8 +31,38 @@ const editPost = asyncWrapper(
     }
 )
 
+const likePost = asyncWrapper(async (req, res, next) => {
+    const postId = sanitize(req.params.id); 
+    const userId = sanitize(req.user.id);
+    const post = await Post.findById(postId); 
+    const hasLiked = post.likes.includes(userId);
+    if (hasLiked) post.likes.pull(userId);
+    else  post.likes.addToSet(userId);
+    await post.save();
+    res.status(200).json({status: httpStatus.Success, data: { likes: post.likes.length, message: hasLiked ? "Post unliked" : "Post liked" }});
+})
+
+const addComment = asyncWrapper(async (req, res, next) => {
+    const {content} = sanitize(req.body);
+    const postId = sanitize(req.params.id);
+    const commenter = sanitize(req.user.id);
+    const comment = await Comment.create({content, post: postId, writer: commenter});
+    const post = await Post.findById(postId);
+    post.comments.addToSet(comment.id);
+    await post.save();
+    res.status(200).json({status: httpStatus.Success, data: { message: 'Comment added successfully' }});
+});
+
+const deletePost = asyncWrapper(async (req, res, next) => {
+    const postId = sanitize(req.params.id);
+    await Post.findByIdAndDelete(postId)
+    res.status(200).json({status: httpStatus.Success, data: { message: 'Post deleted successfully' }});
+});
 
 module.exports={
     createPost,
-    editPost
+    editPost,
+    likePost,
+    addComment,
+    deletePost
 }

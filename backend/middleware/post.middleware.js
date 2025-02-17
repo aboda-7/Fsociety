@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const {userFind} = require('../utils/user.find');
 const Post = require('../models/post.model');
+const Comment = require('../models/comment.model'); 
 
 const postDataChecker = asyncWrapper(
     async (req, res, next) => {
@@ -33,10 +34,6 @@ const editPost = asyncWrapper(
         const post = await Post.findOne({_id: postId});
         const editor = sanitize (req.user.id);
 
-        if(!post){
-            const error = AppError.create('Post not found', 404, httpStatus.Error);
-            return next(error);
-        }
 
         if(editor !== post.publisher.toString()){
             const error = AppError.create('You are not allowed to edit this post', 403, httpStatus.Error);
@@ -47,8 +44,37 @@ const editPost = asyncWrapper(
     }
 )
 
+const isPost = asyncWrapper(
+    async (req, res, next) => {
+        const postId = sanitize(req.params.id); 
+        const post = await Post.findById(postId);
+        if (!post) {
+            return next(new AppError("Post not found", 404));
+        }
+        next();
+    }
+);
+
+const deletePost = asyncWrapper(
+    async (req,res,next) => {
+        const postId = sanitize(req.params.id);
+        const post = await Post.findById(postId);
+        const editor = sanitize(req.user.id);
+        if(editor !== post.publisher.toString() && editor.role !== 'admin' && editor.role !== 'owner'){
+            return next(new AppError('You are not allowed to delete this post', 403, httpStatus.Error));
+        }
+        await Comment.deleteMany({ _id: { $in: post.comments } });
+        post.comments = [];
+        post.likes = [];
+        await post.save(); 
+        next();
+    }
+)
+
 
 module.exports={
     postDataChecker,
-    editPost
+    editPost,
+    isPost,
+    deletePost,
 }

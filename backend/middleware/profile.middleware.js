@@ -9,13 +9,7 @@ const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const {userFind} = require('../utils/user.find');
-<<<<<<< HEAD
-const Follow = require('../models/profile.model');
-const mongoose = require('mongoose');
-
-=======
 const Profile = require('../models/profile.model');
->>>>>>> 34d39e17b6dbf46081174d44b02492cac731c85e
 
 const checkPassword = asyncWrapper( 
     async (req, res, next) => {
@@ -79,9 +73,8 @@ const demoteUser = asyncWrapper(
     }
 );
 
-<<<<<<< HEAD
 
-const followUser = asyncWrapper( 
+/*const followUser = asyncWrapper( 
     async (req,res,next) => {
         const session = await mongoose.startSession();
         session.startTransaction();
@@ -127,9 +120,8 @@ const followUser = asyncWrapper(
             session.endSession();
         }
     }
-);
+);*/
 
-=======
 const checkProfile=asyncWrapper(
     async ( req, res, next) =>{
         const profile = await Profile.findOne({ user: req.user.id });
@@ -141,16 +133,11 @@ const checkProfile=asyncWrapper(
 );
 
 
->>>>>>> 34d39e17b6dbf46081174d44b02492cac731c85e
   
 module.exports = {
     checkPassword,
     isOwner,
     promoteUser,
     demoteUser,
-<<<<<<< HEAD
-    followUser
-=======
     checkProfile
->>>>>>> 34d39e17b6dbf46081174d44b02492cac731c85e
 }
