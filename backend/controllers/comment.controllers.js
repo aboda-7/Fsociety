@@ -39,8 +39,17 @@ const deleteComment = asyncWrapper(async (req, res, next)=>{
     return res.status(200).json({status: httpStatus.Success, data: {message: 'Comment deleted successfully'}});
 })
 
+const getComment= asyncWrapper(
+    async(req, res, next) =>{
+        const commentId = sanitize(req.params.id);
+        const comment = await Comment.findById(commentId);
+        return res.status(200).json({status: httpStatus.Success, data: { comment }});
+    }
+)
+
 module.exports={
     editComment,
     likeComment,
-    deleteComment
+    deleteComment,
+    getComment
 }

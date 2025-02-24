@@ -14,4 +14,7 @@ router.route('/likeComment/:id')
 router.route('/deleteComment/:id')
     .delete(protect, middleWare.isComment, middleWare.deleteComment, commentControllers.deleteComment);
 
+router.route('/getComment/:id')
+    .get(protect, middleWare.isComment, commentControllers.getComment);
+
 module.exports = router;
