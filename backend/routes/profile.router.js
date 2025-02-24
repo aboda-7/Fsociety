@@ -23,4 +23,7 @@ router.route('/changeBio')
 router.route('/changeProfilePicture')
     .patch(protect,middleWare.checkProfile, profileControllers.changeProfilePicture);
 
+router.route('/getProfile/:userName')
+    .get(protect, profileControllers.getProfile);
+
 module.exports = router;

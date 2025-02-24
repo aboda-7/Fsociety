@@ -61,10 +61,32 @@ const changeProfilePicture = asyncWrapper(
     }
 );
 
+const getProfile = asyncWrapper(
+    async(req, res, next)=>{
+        const {userName} = sanitize(req.params); 
+        const user = await User.findOne({userName});
+        if(!user){
+            const error = AppError.create("User not found", 404, httpStatus.Error);
+            return next(error);
+        } 
+        const profile = await Profile.findOne({user : user._id});
+        return res.status(200).json({status: httpStatus.Success,data : {
+                    "first name" : user.firstName,
+                    "last name" : user.lastName,
+                    "username" : user.userName,
+                    "role" : user.role,
+                    "following" : user.followingCount,
+                    "followers" : user.followersCount,
+                    profile
+                     }});
+    }
+)
+
 module.exports = {
     changePassword,
     promoteUser,
     demoteUser,
     changeBio,
     changeProfilePicture,
+    getProfile
 };
