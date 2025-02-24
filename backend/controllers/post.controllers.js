@@ -59,10 +59,19 @@ const deletePost = asyncWrapper(async (req, res, next) => {
     res.status(200).json({status: httpStatus.Success, data: { message: 'Post deleted successfully' }});
 });
 
+const getPost = asyncWrapper(
+    async (req, res, next)=>{
+        const postId = sanitize(req.params.id);
+        const post= await Post.findById(postId);
+        return res.status(200).json({status: httpStatus.Success, data: { post }})
+    }
+)
+
 module.exports={
     createPost,
     editPost,
     likePost,
     addComment,
-    deletePost
+    deletePost,
+    getPost
 }

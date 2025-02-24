@@ -21,4 +21,7 @@ router.route('/addComment/:id')
 router.route('/deletePost/:id')
     .delete(protect,middleWare.isPost, middleWare.deletePost, postControllers.deletePost);
     
+router.route('/getPost/:id')
+    .get(protect, middleWare.isPost, postControllers.getPost);
+
 module.exports = router;
