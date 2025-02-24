@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const {userFind} = require('../utils/user.find');
 const Post = require('../models/post.model');
 const Comment = require('../models/comment.model'); 
+const Profile = require('../models/profile.model'); 
 
 const postDataChecker = asyncWrapper(
     async (req, res, next) => {
@@ -63,6 +64,9 @@ const deletePost = asyncWrapper(
         if(editor !== post.publisher.toString() && editor.role !== 'admin' && editor.role !== 'owner'){
             return next(new AppError('You are not allowed to delete this post', 403, httpStatus.Error));
         }
+        const profile = await Profile.findOne({user : editor});
+        await profile.posts.pull(postId);
+        await profile.save();
         await Comment.deleteMany({ _id: { $in: post.comments } });
         post.comments = [];
         post.likes = [];
