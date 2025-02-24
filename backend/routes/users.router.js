@@ -17,4 +17,7 @@ router.route('/deleteUser/:email')
 router.route('/forgetPassword')
     .post(userMiddleWare.checkInput,generateAndStoreOTP);
 
+router.route('/getUser/:userName')
+    .get(userMiddleWare.protect, userControllers.getUser);
+
 module.exports = router;
