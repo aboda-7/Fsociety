@@ -99,6 +99,31 @@ const follow = asyncWrapper (
     }
 )
 
+const unFollow=asyncWrapper(
+    async(req, res, next)=>{
+        const {userName} = sanitize(req.params);
+        const toFollow = await User.findOne({userName});
+        const userId = sanitize ( req.user.id);
+        const user = await User.findById(userId);
+        const userProf = await Profile.findOne({user : userId});
+        
+        if(!toFollow)
+            return next(new AppError("user not found", 404));
+
+        if(userName === user.userName)
+            return next(new AppError("You cannot unfollow yourself", 401));
+
+        if (!userProf.following.map(id => id.toString()).includes(toFollow._id.toString())) 
+            return next(new AppError("user is not followed", 400));
+    
+
+        toFollow.followersCount--;
+        await toFollow.save();
+        user.followingCount--;
+        await user.save();
+        next();
+    }
+)
 
 const checkProfile=asyncWrapper(
     async ( req, res, next) =>{
@@ -118,5 +143,6 @@ module.exports = {
     promoteUser,
     demoteUser,
     checkProfile,
-    follow
+    follow,
+    unFollow
 }

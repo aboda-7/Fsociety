@@ -16,7 +16,10 @@ router.route('/demoteUser/:userName')
 
 router.route('/follow/:userName')
     .patch(protect, middleWare.follow, profileControllers.follow);
-    
+
+router.route('/unFollow/:userName')
+    .patch(protect, middleWare.unFollow, profileControllers.unFollow);
+        
 router.route('/changeBio')
     .patch(protect,middleWare.checkProfile, profileControllers.changeBio);
 

@@ -76,6 +76,21 @@ const follow = asyncWrapper(
     }
 )
 
+const unFollow = asyncWrapper(
+    async (req, res, next)=>{
+        const {userName} = sanitize(req.params);
+        const toUnFollow = await User.findOne({userName});
+        const unFollowedProf = await Profile.findOne({user : toUnFollow._id});
+        const user = sanitize(req.user.id);
+        const userProf = await Profile.findOne({user});
+        userProf.following.pull(toUnFollow._id);
+        await userProf.save();
+        unFollowedProf.followers.pull(user);
+        await unFollowedProf.save();
+        return res.status(200).json({status: httpStatus.Success,data:{massage : "user unfollowed successfully"}});
+    }
+)
+
 const getProfile = asyncWrapper(
     async(req, res, next)=>{
         const {userName} = sanitize(req.params); 
@@ -104,5 +119,6 @@ module.exports = {
     changeBio,
     changeProfilePicture,
     getProfile,
-    follow
+    follow,
+    unFollow
 };
