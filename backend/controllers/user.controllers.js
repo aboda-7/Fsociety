@@ -70,7 +70,7 @@ const getUser= asyncWrapper(
     async(req,res,next)=>{
         const userName = sanitize(req.prams);
         const user = await User.findOne(userName);
-        const profile = await Profile.findOne({user: userID});
+        const profile = await Profile.findOne({user: user});
         return res.status(200).json({status: httpStatus.Success,data : {
             "first name" : user.firstName,
             "last name" : user.lastName,
