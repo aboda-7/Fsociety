@@ -56,7 +56,8 @@ const deleteComment = asyncWrapper(
         if (actorId !== comment.writer.toString() && actor.role !== 'admin'&& actor.role !== 'owner'){
             return next(new AppError('You are not allowed to delete this comment', 403));
         }
-        
+        post.comments.pull(commentId);
+        await post.save();
         comment.likes = [];
         await comment.save();
         next();
