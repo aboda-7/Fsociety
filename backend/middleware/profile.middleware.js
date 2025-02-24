@@ -73,54 +73,32 @@ const demoteUser = asyncWrapper(
     }
 );
 
+const follow = asyncWrapper (
+    async (req, res, next) => {
+        const {userName} = sanitize(req.params);
+        const toFollow = await User.findOne({userName});
+        const userId = sanitize ( req.user.id);
+        const user = await User.findById(userId);
+        const userProf = await Profile.findOne({user : userId});
+        
+        if(!toFollow)
+            return next(new AppError("user not found", 404));
 
-/*const followUser = asyncWrapper( 
-    async (req,res,next) => {
-        const session = await mongoose.startSession();
-        session.startTransaction();
-        try {
-            const userId = user._id;
-            const targetId = req.body.target;
-            console.log(userId);
-            const existingFollow = await Follow.findOnd({
-                follower : userId,
-                followed : targetId,
-            }).session(session);
+        if(userName === user.userName)
+            return next(new AppError("You cannot follow yourself", 401));
 
-            if(existingFollow){
-                const error = AppError.create('cannot demote this user', 400, httpStatus.Error);
-                return next(error);
-            }
-            const follow = new Follow({
-                follower : userId,
-                followed : targetId,
-            });
-            await follow.save({session});
+        if (userProf.following.map(id => id.toString()).includes(toFollow._id.toString())) 
+            return next(new AppError("You are already following this user", 400));
+    
 
-            await User.findByIdAndUpdate(
-                targetUserId,
-                { $inc: { followersCount: 1 } },
-                { session }
-            );
-
-            await User.findByIdAndUpdate(
-                currentUserId,
-                { $inc: { followingCount: 1 } },
-                { session }
-            );
-
-            await session.commitTransaction();
-            return res.status(201),json({status : httpStatus.Success , data : {message : "Done !"}});
-        }
-        catch(err){
-            const error = AppError.create('server----error', 500,err);
-            return next(error);
-        }
-        finally {
-            session.endSession();
-        }
+        toFollow.followersCount++;
+        await toFollow.save();
+        user.followingCount++;
+        await user.save();
+        next();
     }
-);*/
+)
+
 
 const checkProfile=asyncWrapper(
     async ( req, res, next) =>{
@@ -139,5 +117,6 @@ module.exports = {
     isOwner,
     promoteUser,
     demoteUser,
-    checkProfile
+    checkProfile,
+    follow
 }

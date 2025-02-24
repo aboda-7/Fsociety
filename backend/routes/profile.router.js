@@ -14,8 +14,8 @@ router.route('/promoteUser/:userName')
 router.route('/demoteUser/:userName')
     .patch(protect,middleWare.isOwner, middleWare.demoteUser, profileControllers.demoteUser);
 
-/*router.route('/follow')
-    .post(middleWare.followUser);*/
+router.route('/follow/:userName')
+    .patch(protect, middleWare.follow, profileControllers.follow);
     
 router.route('/changeBio')
     .patch(protect,middleWare.checkProfile, profileControllers.changeBio);

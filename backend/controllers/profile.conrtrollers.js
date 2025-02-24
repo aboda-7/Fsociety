@@ -61,6 +61,21 @@ const changeProfilePicture = asyncWrapper(
     }
 );
 
+const follow = asyncWrapper(
+    async (req, res, next) =>{
+        const {userName} = sanitize(req.params);
+        const toFollow = await User.findOne({userName});
+        const followedProf = await Profile.findOne({user : toFollow._id});
+        const user = sanitize(req.user.id);
+        const userProf = await Profile.findOne({user});
+        userProf.following.push(toFollow._id);
+        await userProf.save();
+        followedProf.followers.push(user);
+        await followedProf.save();
+        return res.status(200).json({status: httpStatus.Success,data:{massage : "user followed successfully"}});
+    }
+)
+
 const getProfile = asyncWrapper(
     async(req, res, next)=>{
         const {userName} = sanitize(req.params); 
@@ -88,5 +103,6 @@ module.exports = {
     demoteUser,
     changeBio,
     changeProfilePicture,
-    getProfile
+    getProfile,
+    follow
 };
