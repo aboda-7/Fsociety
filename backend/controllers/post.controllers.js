@@ -14,6 +14,9 @@ const createPost = asyncWrapper(
         const {content,attachments} = sanitize (req.body);
         const publisher = sanitize (req.user.id); 
         const post = await Post.create({content,attachments,publisher});
+        const publisherProf = await Profile.findOne({user : publisher});
+        await publisherProf.posts.push(post._id);
+        await publisherProf.save();
         res.status(200).json({status: httpStatus.Success,data: {post, message: 'Post created successfully'}}); 
     }
 );
