@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const appError = require('../utils/app.error');
 const validator = require('validator');
 const User = require('./user.model');
+const Post = require('./post.model');
 
 const profileSchema = new mongoose.Schema({
     bio:{
@@ -26,6 +27,21 @@ const profileSchema = new mongoose.Schema({
         ref : 'user' , 
         required : true
     },
+    followers : [{
+        type : mongoose.Schema.Types.ObjectId , 
+        ref : 'user',
+        required : false 
+    }],
+    following : [{
+        type : mongoose.Schema.Types.ObjectId , 
+        ref : 'user',
+        required : false 
+    }],
+    posts : [{
+        type : mongoose.Schema.Types.ObjectId , 
+        ref : 'post',
+        required : false
+    }]
 })
 
 module.exports = mongoose.model('profile', profileSchema);
