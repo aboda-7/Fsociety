@@ -40,7 +40,9 @@ const deleteUser = asyncWrapper(
     async (req,res, next) => {
         const {email} = sanitize(req.params);
         const userToDelete = await User.findOne({email});
+        const profileToDelete = await Profile.findOne({user : userToDelete.id});
         await userToDelete.deleteOne();
+        await profileToDelete.deleteOne();
         return res.status(200).json({status: httpStatus.Success,data : {message: 'User deleted successfully'}});
     }
 )
@@ -68,13 +70,21 @@ const generateAndStoreOTP = asyncWrapper(async (req, res, next) => {
 
 const getUser= asyncWrapper(
     async(req,res,next)=>{
-        const userName = sanitize(req.prams);
-        const user = await User.findOne(userName);
+        const {userName} = sanitize(req.params);
+        console.log(userName);
+        const user = await User.findOne({userName});
+        console.log(user);
+        if(!user){
+            const error = AppError.create("User not found", 404, httpStatus.Error);
+            return next(error);
+        } 
+        const profile = await Profile.findOne({user : user._id});
+        console.log(profile);
         return res.status(200).json({status: httpStatus.Success,data : {
             "first name" : user.firstName,
             "last name" : user.lastName,
             "username" : user.userName,
-            
+            "profile picture" : profile.profilePicture,
              }});
     }
 )
