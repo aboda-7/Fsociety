@@ -71,15 +71,30 @@ const generateAndStoreOTP = asyncWrapper(async (req, res, next) => {
 const getUser= asyncWrapper(
     async(req,res,next)=>{
         const {userName} = sanitize(req.params);
-    
         const user = await User.findOne({userName});
-        
         if(!user){
             const error = AppError.create("User not found", 404, httpStatus.Error);
             return next(error);
         } 
         const profile = await Profile.findOne({user : user._id});
-        
+        return res.status(200).json({status: httpStatus.Success,data : {
+            "first name" : user.firstName,
+            "last name" : user.lastName,
+            "username" : user.userName,
+            "profile picture" : profile.profilePicture,
+             }});
+    }
+)
+
+const getUserById= asyncWrapper(
+    async(req,res,next)=>{
+        const userId = sanitize(req.params.id);
+        const user = await User.findById(userId);
+        if(!user){
+            const error = AppError.create("User not found", 404, httpStatus.Error);
+            return next(error);
+        } 
+        const profile = await Profile.findOne({user : userId});
         return res.status(200).json({status: httpStatus.Success,data : {
             "first name" : user.firstName,
             "last name" : user.lastName,
@@ -94,6 +109,7 @@ module.exports = {
     signIn,
     deleteUser,
     generateAndStoreOTP,
-    getUser
+    getUser,
+    getUserById
 }
 

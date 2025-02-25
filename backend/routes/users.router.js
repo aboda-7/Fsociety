@@ -20,4 +20,7 @@ router.route('/forgetPassword')
 router.route('/getUser/:userName')
     .get(userMiddleWare.protect, userControllers.getUser);
 
+router.route('/getUserById/:id')
+    .get(userMiddleWare.protect, userControllers.getUserById);
+
 module.exports = router;
