@@ -8,6 +8,9 @@ const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const {userFind} = require('../utils/user.find');
+const Profile = require('../models/profile.model');
+const Post = require('../models/post.model');
+const Comment = require('../models/comment.model');
 
 
 const foundUser = asyncWrapper(async (req, res, next) => {
@@ -88,6 +91,42 @@ const checkAuthorization = asyncWrapper(async (req, res, next) => {
     next();
 });
 
+const deleteUser=asyncWrapper(
+    async(req, res, next)=>{
+        const {email} = sanitize(req.params);
+        const userToDelete = await User.findOne({email});
+        const profileToDelete = await Profile.findOne({user : userToDelete._id});
+
+        for(const followerId of profileToDelete.followers){
+            const follower = await User.findById(followerId);
+            follower.followingCount--;
+            await follower.save();
+            const followerProf= await Profile.findOne({user : followerId});
+            followerProf.following.pull(userToDelete._id);
+            await followerProf.save();
+        }
+
+        for(const followedId of profileToDelete.following){
+            const followed = await User.findById(followedId);
+            followed.followersCount--;
+            await followed.save();
+            const followedProf= await Profile.findOne({user : followedId});
+            followedProf.followers.pull(userToDelete._id);
+            await followerProf.save();
+        }
+
+        for(const postId of profileToDelete.posts ){
+            const post = await Post.findById(postId);
+            await Comment.deleteMany({ _id: { $in: post.comments } });
+            post.comments = [];
+            post.likes = [];
+            await post.save(); 
+            await Post.findByIdAndDelete(postId);
+        }
+        next();
+    }
+)
+
 const protect = async (req, res, next) => {
     const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
     
@@ -113,5 +152,6 @@ module.exports = {
     checkInputAndPassword,
     checkAuthorization,
     protect,    
-    checkInput
+    checkInput,
+    deleteUser
 };
