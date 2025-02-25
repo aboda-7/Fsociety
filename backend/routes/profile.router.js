@@ -29,4 +29,7 @@ router.route('/changeProfilePicture')
 router.route('/getProfile/:userName')
     .get(protect, profileControllers.getProfile);
 
+router.route('/getProfileById/:id')
+    .get(protect, profileControllers.getProfileById);
+
 module.exports = router;

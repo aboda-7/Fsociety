@@ -112,6 +112,27 @@ const getProfile = asyncWrapper(
     }
 )
 
+const getProfileById = asyncWrapper(
+    async(req, res, next)=>{
+        const userId = sanitize(req.params.id); 
+        const user = await User.findById(userId);
+        if(!user){
+            const error = AppError.create("User not found", 404, httpStatus.Error);
+            return next(error);
+        } 
+        const profile = await Profile.findOne({user : userId});
+        return res.status(200).json({status: httpStatus.Success,data : {
+                    "first name" : user.firstName,
+                    "last name" : user.lastName,
+                    "username" : user.userName,
+                    "role" : user.role,
+                    "following" : user.followingCount,
+                    "followers" : user.followersCount,
+                    profile
+                     }});
+    }
+)
+
 module.exports = {
     changePassword,
     promoteUser,
@@ -120,5 +141,6 @@ module.exports = {
     changeProfilePicture,
     getProfile,
     follow,
-    unFollow
+    unFollow,
+    getProfileById
 };
