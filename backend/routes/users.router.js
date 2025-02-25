@@ -12,7 +12,7 @@ router.route('/signIn')
     .post(userMiddleWare.checkInputAndPassword,userControllers.signIn);
 
 router.route('/deleteUser/:email')
-    .delete(checkRefreshToken,userMiddleWare.protect,userMiddleWare.checkAuthorization,
+    .delete(userMiddleWare.protect,userMiddleWare.checkAuthorization,
         userMiddleWare.deleteUser, userControllers.deleteUser);
 
 router.route('/forgetPassword')

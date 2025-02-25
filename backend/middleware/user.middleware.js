@@ -76,7 +76,7 @@ const checkAuthorization = asyncWrapper(async (req, res, next) => {
     const { email } = sanitize(req.params);
     const loggedInUserId = sanitize(req.user.id);
     const user = await User.findById(loggedInUserId);
-    const loggedInUserRole = User.role;
+    const loggedInUserRole = user.role;
 
     if (loggedInUserRole !== 'admin' && loggedInUserRole !== 'owner') {
         const error = AppError.create('You are not authorized to perform this action', 401, httpStatus.Error);
@@ -112,7 +112,7 @@ const deleteUser=asyncWrapper(
             await followed.save();
             const followedProf= await Profile.findOne({user : followedId});
             followedProf.followers.pull(userToDelete._id);
-            await followerProf.save();
+            await followedProf.save();
         }
 
         for(const postId of profileToDelete.posts ){
