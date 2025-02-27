@@ -3,6 +3,7 @@ import googleLogo from "../images/google.png";
 import "./logIn.css";
 import { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const LogIn = () => {
 
@@ -30,16 +31,33 @@ const LogIn = () => {
     e.preventDefault();
     setError("");
     setMessage("");
-  
+    
     try {
       const response = await axios.post(`http://localhost:4000/users/signIn`, formData);
-  
+      
       const token  = response.data.data.token;
-      const username = response.data.userName;
-  
-      if (!username) throw new Error("Username is missing from response");
-  
       localStorage.setItem("token", token);
+
+      const getUserId = () => {
+          const token = localStorage.getItem("token");
+          if (!token) return null;
+          try {
+            const decoded = jwtDecode(token);
+            return decoded.id;
+          } catch (error) {
+            console.error("Invalid token", error);
+            return null;
+          }
+        };
+      
+        const userId = getUserId();
+        
+        const userNameResponse = await axios.get(`http://localhost:4000/users/getUserById/${userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        
+        const username = userNameResponse.data.data.username
+  
       window.location.href = `/profile/${username}`;
     } catch (err) {
       setError(err.response?.data?.message || "Login failed. Please try again.");

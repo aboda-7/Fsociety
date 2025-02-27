@@ -4,7 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import LikeButton from '../components/likeButton';
+import LikeButton from "../components/likeButton.jsx"
 
 const ProfilePage = () => {
   const location = useLocation();
@@ -40,8 +40,6 @@ const ProfilePage = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         
-        
-        // console.log("Profile Data:", response.data.data); // Debugging
         setUser(response.data.data);
         setRole(response.data.data.role);
       } catch (err) {
@@ -87,50 +85,6 @@ useEffect(() => {
   fetchPosts();
 }, []);
 
-const handleLike = async (postId) => {
-  const userId = getUserId();
-  // console.log(userId)
-  if (!userId) return;
-
-  setPosts((prevPosts) =>
-    prevPosts.map((post) =>
-      post._id === postId
-        ? {
-            ...post,
-            likes: post.likes.includes(userId)
-              ? post.likes.filter((id) => id !== userId) // Unlike
-              : [...post.likes, userId], // Like
-          }
-        : post
-    )
-  );
-
-  try {
-    const token = localStorage.getItem("token");
-
-    await axios.patch(
-      `http://localhost:4000/post/likePost/${postId}`,
-      {}, // Empty body
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-  } catch (error) {
-    console.error("Error liking post:", error);
-
-    // Revert UI if request fails
-    setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post._id === postId
-          ? {
-              ...post,
-              likes: post.likes.includes(userId)
-                ? [...post.likes, userId] // Re-add like
-                : post.likes.filter((id) => id !== userId), // Remove like
-            }
-          : post
-      )
-    );
-  }
-};
 
  const isProfilePage = role === 'user';
 
@@ -170,7 +124,6 @@ const handleLike = async (postId) => {
                 <div className="post-actions">
                   <LikeButton postId={post._id} initialLikes={post.likes} userId={userId} />
                   <button>Comment</button>
-                  <button>Share</button>
                 </div>
               </div>
             </div>
