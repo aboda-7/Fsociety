@@ -32,4 +32,7 @@ router.route('/getProfile/:userName')
 router.route('/getProfileById/:id')
     .get(protect, profileControllers.getProfileById);
 
+router.route('/logOut')
+    .get(protect, profileControllers.logOut);
+
 module.exports = router;

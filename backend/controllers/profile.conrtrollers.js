@@ -6,6 +6,8 @@ const sanitize = require('mongo-sanitize');
 const AppError = require('../utils/app.error');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const TokenBlacklist = require('../models/tokenBlacklist.model');
+
 
 
 const changePassword = asyncWrapper(
@@ -133,6 +135,23 @@ const getProfileById = asyncWrapper(
     }
 )
 
+const logOut = asyncWrapper(async (req, res, next) => {
+    try {
+        const token = req.headers.authorization?.split(' ')[1];
+
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
+
+        await TokenBlacklist.create({ token });
+
+        res.status(200).json({ message: 'Successfully signed out' });
+    } catch (error) {
+        next(error);
+    }
+});
+
+
 module.exports = {
     changePassword,
     promoteUser,
@@ -142,5 +161,6 @@ module.exports = {
     getProfile,
     follow,
     unFollow,
-    getProfileById
+    getProfileById,
+    logOut
 };
