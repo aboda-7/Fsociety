@@ -18,7 +18,7 @@ body {
     border-radius: 15px;
     width: 400px;
     text-align: center;
-    height: 450px;
+    height: 500px;
     transition: width 1s ease, opacity 1s ease; 
   }
 

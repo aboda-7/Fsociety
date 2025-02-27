@@ -15,7 +15,7 @@
     width: 150px;
     background-color: #111;
     padding: 50px;
-    margin-left: -10px;
+    margin-left: -50px;
     border-radius: 45px;
     font-size: 30px;
   }
@@ -42,7 +42,7 @@
   }
   
   .main-content {
-    width: 60%;
+    width: 80%;
     padding: 20px;
     overflow-y: auto;
     max-height: 100vh;

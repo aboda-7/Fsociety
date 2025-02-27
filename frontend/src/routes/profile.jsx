@@ -14,6 +14,7 @@ const ProfilePage = () => {
   const [error, setError] = useState("");
   const [posts , setPosts] = useState([]);
   const username = window.location.pathname.split("/").pop();
+  const [userProfilePicture, setUserProfilePicture] = useState(null);
   
 
   const getUserId = () => {
@@ -42,6 +43,17 @@ const ProfilePage = () => {
         
         setUser(response.data.data);
         setRole(response.data.data.role);
+
+        try {
+          const token = localStorage.getItem("token");
+          const response = await axios.get(`http://localhost:4000/profile/getProfileById/${userId}`,{
+            headers: {Authorization: `Bearer ${token}`}
+          });
+          setUserProfilePicture(response.data.data.profile?.profilePicture);
+        } catch (error) {
+          console.error("Couldn't get user profile picture")
+        }
+
       } catch (err) {
         setError("Failed to fetch profile");
         console.error(err);
@@ -86,19 +98,17 @@ useEffect(() => {
 }, []);
 
 
- const isProfilePage = role === 'user';
-
   return user ? (
     <div className="container">
       <aside className="sidebar">
         <div className="profile-pic">
-        <img src={user.profile?.profilePicture}  style={{ width: "100%", height: "100%",objectFit: 'cover' }}/>
+        <img src= {userProfilePicture}  style={{ width: "100%", height: "100%",objectFit: 'cover' }}/>
         </div>
         <nav>
           <a href="#">Home</a>
           <a href="#">Profile Page</a>
           <a href="#">Settings</a>
-          {isProfilePage && <a onClick={handleLogOut}>Logout</a>}
+          <a onClick={handleLogOut}>Logout</a>
         </nav>
         <p>Followers: {user.followers}</p>
         <p>Following: {user.following}</p>
@@ -106,8 +116,11 @@ useEffect(() => {
 
       <main className="main-content">
         <section className="profile-section">
+        <div className="profile-pic">
+          <img src= {user.profile?.profilePicture} style={{ width: "100%", height: "100%",objectFit: 'cover' }}/>
+        </div>
           <h1>{username}</h1>
-          <button className="edit-btn">Edit</button>
+          {/* <button className="edit-btn">Edit</button> Add in setting page*/}
           <p>{user.profile.bio}</p>
         </section>
 
@@ -134,7 +147,7 @@ useEffect(() => {
       </section>
       </main>
 
-      <aside className="edit-section">
+      {/* <aside className="edit-section">
         <h3>Edit Username</h3>
         <input
           type="text"
@@ -146,6 +159,8 @@ useEffect(() => {
         ></textarea>
         <button>Save</button>
       </aside>
+      Add edit username and bio in the settings */}
+      
     </div>
   ) : (
     <p style={{color: 'white'}}>Loading...</p>
