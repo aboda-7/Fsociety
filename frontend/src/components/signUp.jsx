@@ -13,6 +13,10 @@ const SignUp = () => {
     navigate('/');
   };
 
+  const handleSignUpClick = () => {
+    navigate('/profile')
+  };
+
   const [formData, setFormData] = useState({
     firstName : '',
     lastName : '',
@@ -71,7 +75,7 @@ const SignUp = () => {
         </div>
         <button className="signUpBtn" onClick={handleSubmit}>Sign Up</button>
         <div className="loginText">or login with</div>
-        <div className="googleBtn">
+        <div className="googleBtn" onClick={handleSignUpClick}>
           <img src={googleLogo} alt="Google Logo" />
         </div>
         <p className="signupText">

@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Jersey+25&display=swap');
+
+.container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background: linear-gradient(315deg, #5C65A1, #2B3786 57%);
+    color: white;
+    font-family: "Jersey 25",sans-serif;
+    overflow: hidden;
+  }
+  
+  .sidebar {
+    height: 90vh;
+    width: 150px;
+    background-color: #111;
+    padding: 50px;
+    margin-left: -10px;
+    border-radius: 45px;
+    font-size: 30px;
+  }
+  
+  .sidebar nav a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    margin: 10px 0;
+  }
+  
+  .profile-pic {
+    width: 80px;
+    height: 80px;
+    background-color: gray;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  
+  .profile-pic.small {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .main-content {
+    width: 60%;
+    padding: 20px;
+    overflow-y: auto;
+    max-height: 100vh;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .main-content::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .profile-section {
+    background: #333;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .edit-btn {
+    background: purple;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+  }
+    
+  h1 {
+      font-size: 50px;
+  }
+  
+  .posts .post {
+    background: #222;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .post-content {
+    margin-left: 10px;
+  }
+  
+  .post-actions button {
+    background: #555;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-right: 5px;
+    cursor: pointer;
+  }
+  
+  .edit-section {
+    width: 20%;
+    background: #222;
+    padding: 20px;
+  }
+  
+  input, textarea {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  button {
+    background: purple;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+  }
+  

@@ -1,7 +1,10 @@
 import { BrowserRouter, Routes, Route, Router, useLocation } from 'react-router-dom'; 
 import SignUp from "./components/signUp.jsx";
 import LogIn from "./components/logIn.jsx";
+// import ProfilePage from './components/ProfilePage.jsx';
+import ProfilePage from './components/profile.jsx';
 import { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 
@@ -21,15 +24,20 @@ function App() {
   }, [location]);
   
   useEffect(() => {
-    document.title="Fsociety"
+    document.title="Fsocial"
   }, []);
   
   return (
-      <Routes>
-        <Route path="/" element={<LogIn />}></Route>
-        <Route path="/signUp" element={<SignUp />}></Route>
-      </Routes>
+    <Routes>
+      <Route path="/" element={<LogIn />}></Route>
+      <Route path="/signUp" element={<SignUp />}></Route>
+      <Route path="/profile/:username" element={<PrivateRoute><ProfilePage /></PrivateRoute>}></Route>
+    </Routes>
   );
+}
+
+function PrivateRoute({ children }) {
+  return localStorage.getItem("token") ? children : <Navigate to="/" />;
 }
 
 export default App;

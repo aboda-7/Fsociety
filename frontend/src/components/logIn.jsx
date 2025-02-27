@@ -28,16 +28,24 @@ const LogIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setError("");
+    setMessage("");
+  
     try {
-      const response = await axios.post('http://localhost:4000/users/signIn', formData);
-      setMessage(response.data.data.message);
-      setError('');
+      const response = await axios.post(`http://localhost:4000/users/signIn`, formData);
+  
+      const token  = response.data.data.token;
+      const username = formData.input;
+  
+      if (!username) throw new Error("Username is missing from response");
+  
+      localStorage.setItem("token", token);
+      window.location.href = `/profile/${username}`;
     } catch (err) {
-      setError(err.response.data.data.message);
-      setMessage('');
+      setError(err.response?.data?.message || "Login failed. Please try again.");
     }
   };
+  
 
 
   return (
