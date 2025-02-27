@@ -93,7 +93,7 @@
   }
   
   .post-actions button {
-    background: #555;
+    background: transparent;
     color: white;
     border: none;
     padding: 5px 10px;
@@ -122,4 +122,28 @@
     padding: 10px;
     cursor: pointer;
   }
+  
+  .like-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .like-button.liked {
+    animation: pop 0.3s ease-in-out;
+  }
+  
+  @keyframes pop {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
   

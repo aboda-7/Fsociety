@@ -20,7 +20,7 @@ const signUp = asyncWrapper(
         const newUser = new User(sanitize(req.body));
         await newUser.save();
         await Profile.create({user : newUser.id});
-        return res.status(201).json({status : httpStatus.Success , data : {message : "User created successfully"}});
+        return res.status(201).json({status : httpStatus.Success , data : {message : "User created successfully"},"userName" : newUser.userName});
     }
 )
 
@@ -32,7 +32,7 @@ const signIn = asyncWrapper(
         const accessToken = await generateToken({id : user._id , role : user.role}, process.env.ACCESS_SECRET, '5m');
         const refreshToken = await generateToken({id : user._id , role : user.role}, process.env.REFRESH_SECRET, '7d');
         await saveToken(res,refreshToken, user._id);
-        return res.status(200).json({status : httpStatus.Success , data : {token : accessToken}});
+        return res.status(200).json({status : httpStatus.Success , data : {token : accessToken}, "userName" : user.userName});
     }
 )
 

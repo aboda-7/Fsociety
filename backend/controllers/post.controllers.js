@@ -70,11 +70,26 @@ const getPost = asyncWrapper(
     }
 )
 
+const getUserPosts = asyncWrapper(
+    async (req,res,next) => {
+        const {userName} = sanitize(req.params);
+        const user = await User.findOne({userName});
+        if(!user){
+            const error = AppError.create("User not found", 404, httpStatus.Error);
+            return next(error);
+        } 
+
+        const posts = await Post.find({ publisher: user._id }).sort({ date: -1 });
+        return res.status(200).json({ status: httpStatus.Success, data: { posts } });
+    }
+)
+
 module.exports={
     createPost,
     editPost,
     likePost,
     addComment,
     deletePost,
-    getPost
+    getPost,
+    getUserPosts
 }

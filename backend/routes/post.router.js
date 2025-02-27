@@ -24,4 +24,7 @@ router.route('/deletePost/:id')
 router.route('/getPost/:id')
     .get(protect, middleWare.isPost, postControllers.getPost);
 
+router.route('/getUserPosts/:userName')
+    .get(protect, postControllers.getUserPosts);
+
 module.exports = router;

@@ -35,7 +35,7 @@ const LogIn = () => {
       const response = await axios.post(`http://localhost:4000/users/signIn`, formData);
   
       const token  = response.data.data.token;
-      const username = formData.input;
+      const username = response.data.userName;
   
       if (!username) throw new Error("Username is missing from response");
   

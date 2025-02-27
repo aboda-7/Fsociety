@@ -39,6 +39,7 @@ const SignUp = () => {
 
     try {
       const response = await axios.post('http://localhost:4000/users/signUp', formData);
+      navigate('/');
       setMessage(response.data.data.message);
       setError('');
     } catch (err) {

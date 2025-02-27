@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route, Router, useLocation } from 'react-router-dom'; 
-import SignUp from "./components/signUp.jsx";
-import LogIn from "./components/logIn.jsx";
+import SignUp from "./routes/signUp.jsx";
+import LogIn from "./routes/logIn.jsx";
 // import ProfilePage from './components/ProfilePage.jsx';
-import ProfilePage from './components/profile.jsx';
+import ProfilePage from './routes/profile.jsx';
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
