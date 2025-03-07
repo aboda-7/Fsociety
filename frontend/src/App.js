@@ -1,11 +1,12 @@
 import { BrowserRouter, Routes, Route, Router, useLocation } from 'react-router-dom'; 
 import SignUp from "./routes/signUp.jsx";
 import LogIn from "./routes/logIn.jsx";
-// import ProfilePage from './components/ProfilePage.jsx';
 import ProfilePage from './routes/profile.jsx';
+import HomePage from './routes/homePage.jsx'
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { Home } from 'lucide-react';
 
 
 // Mesa mesa
@@ -32,6 +33,7 @@ function App() {
       <Route path="/" element={<LogIn />}></Route>
       <Route path="/signUp" element={<SignUp />}></Route>
       <Route path="/profile/:username" element={<PrivateRoute><ProfilePage /></PrivateRoute>}></Route>
+      <Route path="/home" element={<HomePage />}></Route>
     </Routes>
   );
 }

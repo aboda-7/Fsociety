@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import LikeButton from "../components/likeButton.jsx"
+import Modal from "react-modal"
 
 const ProfilePage = () => {
   const location = useLocation();
@@ -15,6 +16,11 @@ const ProfilePage = () => {
   const [posts , setPosts] = useState([]);
   const username = window.location.pathname.split("/").pop();
   const [userProfilePicture, setUserProfilePicture] = useState(null);
+  const [isModalOpen , setIsModalOpen] = useState(false);
+  const [selectedPostComments, setSelectedPostComments] = useState([]);
+
+  const [comments, setComments] = useState([]);
+  const [loadingComments, setLoadingComments] = useState(false);
   
 
   const getUserId = () => {
@@ -70,7 +76,6 @@ const ProfilePage = () => {
  const handleLogOut = async (e) => {
   try {
     const token = localStorage.getItem("token");
-    // console.log(`Token : ${token}`)
     const response = await axios.get(`http://localhost:4000/profile/logOut`, {
       headers: { Authorization: `Bearer ${token}` } 
     });
@@ -88,6 +93,8 @@ const ProfilePage = () => {
       headers: {Authorization: `Bearer ${token}`}
     })
     setPosts(postsResponse.data.data.posts);
+
+    console.log(posts);
   } catch (error) {
     console.error("Error fetching posts:", error);
   }
@@ -97,6 +104,64 @@ useEffect(() => {
   fetchPosts();
 }, []);
 
+
+const fetchComments = async () => {
+  setLoadingComments(true);
+  try {
+    const token = localStorage.getItem("token");
+    const fetchedComments = await Promise.all(
+      selectedPostComments.map(async (commentId) => {
+        try {
+          const response = await axios.get(
+            `http://localhost:4000/comment/getComment/${commentId}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+
+          const commentData = response.data.data;
+
+          const profileResponse = await axios.get(
+            `http://localhost:4000/profile/getProfileById/${commentData.comment.writer}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+        
+          const profilePicture = profileResponse.data.data.profile.profilePicture;
+          const userName = profileResponse.data.data.username;
+
+          return {
+            text: commentData.comment.content,
+            profilePicture: profilePicture,
+            writer: userName, 
+          };
+
+        } catch (error) {
+          console.error(`Error fetching comment ${commentId}: ${error}`);
+          return { id: commentId, text: "Error loading comment" };
+        }
+      })
+    );
+    setComments(fetchedComments);
+    
+  } catch (error) {
+    console.error("Error loading comments:", error);
+  }
+  setLoadingComments(false);
+}
+
+useEffect(() => {
+  if (isModalOpen) {
+    fetchComments();
+  }
+}, [isModalOpen]);
+
+const openModal = (post) => {
+  setSelectedPostComments(post.comments); // Store comment IDs
+  setIsModalOpen(true);
+};
+
+const closeModal = () => {
+  setIsModalOpen(false);
+  setSelectedPostComments(null);
+};
 
   return user ? (
     <div className="container">
@@ -136,7 +201,7 @@ useEffect(() => {
                 <p>{post.content}</p>
                 <div className="post-actions">
                   <LikeButton postId={post._id} initialLikes={post.likes} userId={userId} />
-                  <button>Comment</button>
+                  <button onClick={() => openModal(post)}>Comment ({post.comments.length})</button>
                 </div>
               </div>
             </div>
@@ -146,7 +211,6 @@ useEffect(() => {
         )}
       </section>
       </main>
-
       {/* <aside className="edit-section">
         <h3>Edit Username</h3>
         <input
@@ -160,7 +224,32 @@ useEffect(() => {
         <button>Save</button>
       </aside>
       Add edit username and bio in the settings */}
-      
+      {isModalOpen && (
+      <div className="modal-overlay">
+        <div className="modal">
+          <button className="close-button" onClick={closeModal}>
+            X
+          </button>
+          <h3>Comments</h3>
+          {loadingComments ? (
+            <p>Loading comments...</p>
+          ) : comments.length > 0 ? (
+            comments.map((comment, index) => (
+              <div key={index} className="comment-container">
+                <img src={comment.profilePicture} alt="Profile" className="profile-pic small" />
+                <div className="comment-content">
+                  <p className="comment-username">{comment.writer}</p>
+                  <p className="comment-text">{comment.text}</p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No comments yet.</p>
+          )}
+
+        </div>
+      </div>
+    )}
     </div>
   ) : (
     <p style={{color: 'white'}}>Loading...</p>
