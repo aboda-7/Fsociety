@@ -15,9 +15,6 @@ router.route('/deleteUser/:email')
     .delete(userMiddleWare.protect,userMiddleWare.checkAuthorization,
         userMiddleWare.deleteUser, userControllers.deleteUser);
 
-router.route('/forgetPassword')
-    .post(userMiddleWare.checkInput,generateAndStoreOTP);
-
 router.route('/getUser/:userName')
     .get(userMiddleWare.protect, userControllers.getUser);
 

@@ -47,27 +47,6 @@ const deleteUser = asyncWrapper(
     }
 )
 
-const generateAndStoreOTP = asyncWrapper(async (req, res, next) => {
-    const user = req.user; 
-    try {
-        const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        const sent = await sendOTP(user.email, otp); // Await the sendOTP function
-        const hashedOTP = await bcrypt.hash(otp, 10);
-
-        if (sent) {
-            await Otp.create({ userId: user._id, otp: hashedOTP });
-            req.userId = user._id;
-            return res.status(200).json({ status: http.Success, data: { message: "OTP sent successfully" } });
-        } else {
-            const error = AppError.create("Email not sent, try again", 500, httpStatus.Fail);
-            return next(error);
-        }
-    } catch (err) {
-        const error = AppError.create(err.message, 500, httpStatus.Fail);
-        return next(error);
-    }
-});
-
 const getUser= asyncWrapper(
     async(req,res,next)=>{
         const {userName} = sanitize(req.params);
@@ -108,7 +87,6 @@ module.exports = {
     signUp,
     signIn,
     deleteUser,
-    generateAndStoreOTP,
     getUser,
     getUserById
 }
