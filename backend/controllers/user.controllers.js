@@ -12,7 +12,7 @@ const {userFind} = require('../utils/user.find');
 const Token = require('../models/token.model');
 const {saveToken} = require('../utils/jwt.token');
 const sendOTP = require('../utils/mailer');
-const Otp = require('../models/otp.model');
+// const Otp = require('../models/otp.model');
 const Profile = require('../models/profile.model');
 
 const signUp = asyncWrapper(
