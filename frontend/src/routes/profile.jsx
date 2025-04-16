@@ -1,10 +1,10 @@
-// src/pages/ProfilePage.jsx
 import { useEffect, useState } from 'react';
 import "./profile.css";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import Posts from "../components/post";
+import Sidebar from "../components/sidebar"; // Import the new Sidebar component
 
 const ProfilePage = () => {
   const location = useLocation();
@@ -14,7 +14,7 @@ const ProfilePage = () => {
   const [error, setError] = useState("");
   const username = window.location.pathname.split("/").pop();
   const [userProfilePicture, setUserProfilePicture] = useState(null);
-
+  
   const getUserId = () => {
     const token = localStorage.getItem("token");
     if (!token) return null;
@@ -26,32 +26,29 @@ const ProfilePage = () => {
       return null;
     }
   };
-
-  const userId = getUserId();
   
+  const userId = getUserId();
+ 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem("token");
         if (!token) throw new Error("No token found");
-
         const response = await axios.get(`http://localhost:4000/profile/getProfile/${username}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        
+       
         setUser(response.data.data);
         setRole(response.data.data.role);
-
+        
         try {
-          const token = localStorage.getItem("token");
-          const response = await axios.get(`http://localhost:4000/profile/getProfileById/${userId}`,{
+          const profileResponse = await axios.get(`http://localhost:4000/profile/getProfileById/${userId}`,{
             headers: {Authorization: `Bearer ${token}`},
           });
-          setUserProfilePicture(response.data.data.profile?.profilePicture);
+          setUserProfilePicture(profileResponse.data.data.profile?.profilePicture);
         } catch (error) {
           console.error("Couldn't get user profile picture");
         }
-
       } catch (err) {
         setError("Failed to fetch profile");
         console.error(err);
@@ -61,60 +58,31 @@ const ProfilePage = () => {
         }, 2000);
       }
     };
-
     fetchProfile();
   }, [username, userId]);
 
-  const handleLogOut = async (e) => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get(`http://localhost:4000/profile/logOut`, {
-        headers: { Authorization: `Bearer ${token}` } 
-      });
-      console.log(response.data);
-      navigate('/');
-    } catch (error) {
-      console.log(`Couldn't sign Out" ${error}`);
-    }
-  }
-
-  const handleHome = () => {
-    navigate('/home');
-  };
-
   return user ? (
     <div className="container">
-      <aside className="sidebar">
-        <div className="profile-pic">
-          <img src={userProfilePicture} style={{ width: "100%", height: "100%", objectFit: 'cover' }} />
-        </div>
-        <nav>
-          <a onClick={handleHome}>Home</a>
-          <a href="#">Profile Page</a>
-          <a href="#">Settings</a>
-          <a onClick={handleLogOut}>Logout</a>
-        </nav>
-        <p>Followers: {user.followers}</p>
-        <p>Following: {user.following}</p>
-
-        {/* Sidebar New Post Button */}
-        <button onClick={() => document.querySelector('.new-post-button').click()} className="new-post-button">
-          + New Post
-        </button>
-      </aside>
-
+      <Sidebar 
+        userProfilePicture={userProfilePicture} 
+        followers={user.followers}
+        following={user.following}
+      />
       <main className="main-content">
         <section className="profile-section">
           <div className="profile-pic">
-            <img src={user.profile?.profilePicture} style={{ width: "100%", height: "100%", objectFit: 'cover' }} />
+            <img 
+              src={user.profile?.profilePicture} 
+              style={{ width: "100%", height: "100%", objectFit: 'cover' }} 
+              alt="Profile"
+            />
           </div>
           <h1>{username}</h1>
           <p>{user.profile.bio}</p>
         </section>
-
         {/* Posts component handles all post functionality */}
-        <Posts 
-          username={username} 
+        <Posts
+          username={username}
           userProfilePicture={user.profile?.profilePicture}
         />
       </main>

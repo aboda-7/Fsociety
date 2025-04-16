@@ -1,4 +1,3 @@
-/* src/pages/profile.css */
 @import url('https://fonts.googleapis.com/css2?family=Jersey+25&display=swap');
 
 html, body {
@@ -17,33 +16,6 @@ html, body {
   background: linear-gradient(315deg, #5C65A1, #2B3786 57%);
   color: white;
   font-family: "Jersey 25",sans-serif;
-  overflow: hidden;
-}
-
-.sidebar {
-  height: 90vh;
-  width: 150px;
-  background-color: #111;
-  padding: 50px;
-  margin-left: -50px;
-  border-radius: 45px;
-  font-size: 30px;
-}
-
-.sidebar nav a {
-  display: block;
-  color: white;
-  text-decoration: none;
-  margin: 10px 0;
-  cursor: pointer;
-}
-
-.profile-pic {
-  width: 80px;
-  height: 80px;
-  background-color: gray;
-  border-radius: 50%;
-  margin-bottom: 20px;
   overflow: hidden;
 }
 
@@ -71,6 +43,15 @@ html, body {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.profile-pic {
+  width: 80px;
+  height: 80px;
+  background-color: gray;
+  border-radius: 50%;
+  margin-bottom: 20px;
+  overflow: hidden;
 }
 
 .edit-btn {
@@ -122,22 +103,4 @@ button {
   100% {
     transform: scale(1);
   }
-}
-
-/* Sidebar New Post Button */
-.sidebar .new-post-button {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-  margin-top: 20px;
-  width: 100%;
-}
-
-.sidebar .new-post-button:hover {
-  background-color: #0056b3;
 }
