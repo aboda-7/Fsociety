@@ -23,20 +23,34 @@ const HomePage = () => {
 
   // Effect to set user info from JWT token
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
+    const fetchProfile = async () => {
       try {
-        const decoded = jwtDecode(token);
-        console.log("Decoded Token:", decoded); // Debugging step
-        setUser(decoded);
-        setUserId(decoded.userId); 
-        setUsername(decoded.userName);  // Ensure username is set
-        setUserProfilePicture(decoded.profilePicture);
-      } catch (error) {
-        console.error("Error decoding token:", error);
+        const token = localStorage.getItem("token");
+        if (!token) throw new Error("No token found");
+
+        console.log(token);
+      
+        const username = localStorage.getItem("username");
+
+        const response = await axios.get(`http://localhost:4000/profile/getProfile/${username}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        
+        setUser(response.data.data);
+        setUserProfilePicture(response.data.data.profile?.profilePicture);
+        console.log(response.data.data.profile?.profilePicture);
+
+      } catch (err) {
+        console.error(err);
+        localStorage.removeItem("token");
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 2000);
       }
-    }
-  }, []);
+    };
+
+    fetchProfile();
+  }, [username]);
 
   const handleLogOut = async () => {
     try {
@@ -121,9 +135,6 @@ const HomePage = () => {
     setSelectedPostComments([]);
   };
 
-  // const handleProfileClick = async () => {
-  //     navigate(`/profile/${username}`);
-  // };
 
   // New post modal handlers
   const openPostModal = () => setIsPostModalOpen(true);

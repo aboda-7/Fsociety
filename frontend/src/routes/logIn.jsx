@@ -38,6 +38,7 @@ const LogIn = () => {
       const token  = response.data.data.token;
       localStorage.setItem("token", token);
 
+
       const getUserId = () => {
           const token = localStorage.getItem("token");
           if (!token) return null;
@@ -57,6 +58,7 @@ const LogIn = () => {
         });
         
         const username = userNameResponse.data.data.username
+        localStorage.setItem("username", username);
   
       window.location.href = `/profile/${username}`;
     } catch (err) {
