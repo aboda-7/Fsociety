@@ -21,6 +21,10 @@ const Sidebar = ({ userProfilePicture, followers, following }) => {
     navigate('/home');
   };
 
+  const handleProfile = () => {
+    navigate(`/profile/${localStorage.getItem("username")}`);
+  }
+
   return (
     <aside className="sidebar">
       <div className="profile-pic">
@@ -32,7 +36,7 @@ const Sidebar = ({ userProfilePicture, followers, following }) => {
       </div>
       <nav>
         <a onClick={handleHome}>Home</a>
-        <a href="#">Profile Page</a>
+        <a onclick={handleProfile}>Profile Page</a>
         <a href="#">Settings</a>
         <a onClick={handleLogOut}>Logout</a>
       </nav>

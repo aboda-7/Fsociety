@@ -159,6 +159,10 @@ const HomePage = () => {
     }
   };
 
+  const handleProfile = () => {
+    navigate(`/profile/${localStorage.getItem("username")}`);
+  }
+
   return user ? (
     <div className="container">
       <aside className="sidebar">
@@ -171,7 +175,7 @@ const HomePage = () => {
         </div>
         <nav>
           <a href="#">Home</a>
-          <a href="#"/*onClick={handleProfileClick}*/>Profile</a> {/* Updated this */}
+          <a onClick={handleProfile}>Profile</a> {/* Updated this */}
           <a href="#">Settings</a>
           <a onClick={handleLogOut}>Logout</a>
         </nav>
